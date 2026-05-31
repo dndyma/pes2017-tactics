@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PES 2017 Tactics Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #86868b;
+      --accent: #0071e3;
+      --accent-light: #e8f2ff;
+      --border: #d2d2d7;
+      --border-light: #e8e8ed;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+      --shadow-xl: 0 20px 60px rgba(0,0,0,0.12);
+      --radius: 16px;
+      --green: #34c759;
+      --orange: #ff9500;
+      --red: #ff3b30;
+      --purple: #af52de;
+      --blue: #007aff;
+      --teal: #5ac8fa;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(245,245,247,0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .navbar-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .navbar-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 18px; color: var(--text); text-decoration: none; letter-spacing: -0.3px;
+    }
+
+    .navbar-brand svg { color: var(--accent); }
+
+    .navbar-links { display: flex; align-items: center; gap: 6px; }
+
+    .navbar-links a {
+      text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500;
+      padding: 6px 14px; border-radius: 20px; transition: all 0.2s ease; cursor: pointer;
+    }
+
+    .navbar-links a:hover, .navbar-links a.active { color: var(--text); background: rgba(0,0,0,0.04); }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .hero { padding: 120px 24px 60px; text-align: center; max-width: 800px; margin: 0 auto; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px;
+      background: var(--accent-light); color: var(--accent); border-radius: 20px;
+      font-size: 12px; font-weight: 600; margin-bottom: 20px; letter-spacing: 0.3px; text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 64px); font-weight: 800; letter-spacing: -2px; line-height: 1.05; margin-bottom: 16px;
+      background: linear-gradient(135deg, #1d1d1f 0%, #6e6e73 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .hero p { font-size: 18px; color: var(--text-secondary); max-width: 540px; margin: 0 auto 32px; line-height: 1.6; }
+
+    .hero-search { max-width: 480px; margin: 0 auto; position: relative; }
+
+    .hero-search input {
+      width: 100%; padding: 14px 20px 14px 48px; border: 1px solid var(--border); border-radius: 14px;
+      font-size: 15px; font-family: inherit; background: var(--card); color: var(--text);
+      outline: none; transition: all 0.3s ease; box-shadow: var(--shadow);
+    }
+
+    .hero-search input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,113,227,0.12), var(--shadow); }
+    .hero-search input::placeholder { color: var(--text-tertiary); }
+    .hero-search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); }
+
+    .filter-section { max-width: 1200px; margin: 0 auto; padding: 0 24px 40px; }
+
+    .filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+    .filter-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px;
+      border: 1px solid var(--border); border-radius: 20px; font-size: 13px; font-weight: 500;
+      font-family: inherit; background: var(--card); color: var(--text-secondary);
+      cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
+    }
+
+    .filter-btn:hover { border-color: var(--text-tertiary); color: var(--text); }
+    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+    .tactics-section { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .section-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+    .tactics-count { font-size: 13px; color: var(--text-tertiary); font-weight: 500; }
+
+    .tactics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+
+    .tactic-card {
+      background: var(--card); border-radius: var(--radius); border: 1px solid var(--border-light);
+      padding: 24px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative; overflow: hidden;
+    }
+
+    .tactic-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-accent, var(--accent)); opacity: 0; transition: opacity 0.3s ease;
+    }
+
+    .tactic-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: transparent; }
+    .tactic-card:hover::before { opacity: 1; }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+    .manager-info { display: flex; align-items: center; gap: 12px; }
+
+    .manager-avatar {
+      width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; color: #fff; flex-shrink: 0;
+    }
+
+    .manager-name { font-size: 11px; color: var(--text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .tactic-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
+
+    .card-formation {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+      background: var(--bg); border-radius: 6px; font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.5px;
+    }
+
+    .card-desc {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
+    .tag-attack { background: #fff0f0; color: var(--red); }
+    .tag-defend { background: #e8f5e9; color: #2e7d32; }
+    .tag-possess { background: #e8f2ff; color: var(--blue); }
+    .tag-counter { background: #fff3e0; color: #e65100; }
+    .tag-press { background: #f3e5f5; color: var(--purple); }
+    .tag-wide { background: #e0f7fa; color: #00838f; }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center;
+      justify-content: center; padding: 24px; opacity: 0; transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.show { display: flex; opacity: 1; }
+
+    .modal {
+      background: var(--card); border-radius: 20px; width: 100%; max-width: 700px;
+      max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-xl);
+      transform: scale(0.95) translateY(10px); transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .modal-overlay.show .modal { transform: scale(1) translateY(0); }
+    .modal::-webkit-scrollbar { width: 6px; }
+    .modal::-webkit-scrollbar-track { background: transparent; }
+    .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    .modal-header {
+      position: sticky; top: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); padding: 24px 28px 16px; border-bottom: 1px solid var(--border-light);
+      z-index: 10; display: flex; align-items: flex-start; justify-content: space-between;
+    }
+
+    .modal-header-left { display: flex; align-items: center; gap: 16px; }
+
+    .modal-avatar {
+      width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center;
+      justify-content: center; color: #fff; flex-shrink: 0;
+    }
+
+    .modal-manager { font-size: 12px; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .modal-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-top: 2px; }
+
+    .modal-formation-badge {
+      display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; padding: 4px 12px;
+      background: var(--bg); border-radius: 8px; font-size: 14px; font-weight: 700; color: var(--text);
+    }
+
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg);
+      color: var(--text-secondary); cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s ease; flex-shrink: 0;
+    }
+
+    .modal-close:hover { background: var(--border); color: var(--text); }
+    .modal-body { padding: 24px 28px 32px; }
+    .modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 28px; }
+    .settings-group { margin-bottom: 24px; }
+
+    .settings-group-title {
+      display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-tertiary);
+      margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);
+    }
+
+    .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
+    .setting-row + .setting-row { border-top: 1px solid var(--border-light); }
+
+    .setting-label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+    .setting-label svg { color: var(--text-tertiary); flex-shrink: 0; }
+    .setting-value { font-size: 13px; font-weight: 600; color: var(--text); text-align: right; }
+
+    .setting-bar { display: flex; align-items: center; gap: 8px; }
+
+    .bar-track { width: 80px; height: 4px; background: var(--border-light); border-radius: 2px; overflow: hidden; }
+
+    .bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .bar-fill.low { background: var(--green); }
+    .bar-fill.mid { background: var(--orange); }
+    .bar-fill.high { background: var(--red); }
+
+    .value-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    .pill-blue { background: var(--accent-light); color: var(--accent); }
+    .pill-green { background: #e8f5e9; color: #2e7d32; }
+    .pill-orange { background: #fff3e0; color: #e65100; }
+    .pill-red { background: #ffebee; color: #c62828; }
+    .pill-purple { background: #f3e5f5; color: #7b1fa2; }
+    .pill-teal { background: #e0f7fa; color: #00838f; }
+
+    .formation-visual {
+      background: linear-gradient(180deg, #2e7d32 0%, #388e3c 50%, #2e7d32 100%);
+      border-radius: 12px; padding: 24px 16px; margin-bottom: 24px; position: relative; overflow: hidden;
+    }
+
+    .formation-visual::before { content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 1px; background: rgba(255,255,255,0.25); }
+
+    .formation-visual::after {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 60px; height: 60px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
+    }
+
+    .formation-lines { display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; z-index: 1; }
+    .formation-line { display: flex; justify-content: center; gap: 16px; }
+
+    .player-dot {
+      width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.9);
+      display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700;
+      color: #2e7d32; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .player-dot.gk { background: #ffcc00; color: #5d4037; }
+
+    .instruction-item { padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border-light); transition: all 0.2s ease; }
+    .instruction-item.active { border-color: transparent; }
+    .instruction-item.active.atk { background: linear-gradient(135deg, #e8f2ff 0%, #f0f4ff 100%); border-color: rgba(0,122,255,0.15); }
+    .instruction-item.active.def { background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f2 100%); border-color: rgba(52,199,89,0.15); }
+    .instruction-item.inactive { background: var(--bg); opacity: 0.5; }
+
+    .instruction-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+
+    .instruction-name { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text); }
+    .instruction-name svg { flex-shrink: 0; }
+
+    .instruction-toggle {
+      display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 20px;
+    }
+
+    .instruction-toggle.on { background: var(--green); color: #fff; }
+    .instruction-toggle.off { background: var(--border-light); color: var(--text-tertiary); }
+    .instruction-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; padding-left: 22px; }
+    .instruction-item.inactive .instruction-desc { display: none; }
+
+    .instruction-sub {
+      display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 600; margin-left: 22px; margin-top: 4px;
+    }
+
+    .instruction-sub.frontline { background: #fff3e0; color: #e65100; }
+    .instruction-sub.deep { background: #e8f5e9; color: #2e7d32; }
+
+    .notes-box { background: var(--bg); border-radius: 12px; padding: 16px; margin-top: 8px; }
+    .notes-box ul { list-style: none; padding: 0; }
+
+    .notes-box ul li {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6; padding: 3px 0;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+
+    .notes-box ul li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin-top: 8px; flex-shrink: 0; }
+
+    .footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border-light); }
+    .footer p { font-size: 12px; color: var(--text-tertiary); }
+
+    .empty-state { text-align: center; padding: 80px 24px; display: none; }
+    .empty-state svg { color: var(--border); margin-bottom: 16px; }
+    .empty-state h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    .empty-state p { font-size: 14px; color: var(--text-tertiary); }
+
+    /* SPIN WHEEL PAGE */
+    .spin-page { padding: 100px 24px 80px; max-width: 900px; margin: 0 auto; }
+
+    .spin-header { text-align: center; margin-bottom: 40px; }
+
+    .spin-header h1 {
+      font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -1.5px;
+      background: linear-gradient(135deg, #1d1d1f 0%, #6e6e73 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .spin-header p { font-size: 16px; color: var(--text-secondary); }
+
+    .spin-tabs {
+      display: flex; gap: 8px; justify-content: center; margin-bottom: 32px;
+    }
+
+    .spin-tab {
+      display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px;
+      border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-weight: 600;
+      font-family: inherit; background: var(--card); color: var(--text-secondary);
+      cursor: pointer; transition: all 0.2s ease;
+    }
+
+    .spin-tab:hover { border-color: var(--text-tertiary); color: var(--text); }
+    .spin-tab.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+    .spin-container {
+      display: flex; flex-direction: column; align-items: center; gap: 32px;
+    }
+
+    .wheel-wrapper {
+      position: relative; width: 380px; height: 380px;
+    }
+
+    .wheel-canvas {
+      width: 380px; height: 380px; border-radius: 50%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12), 0 0 0 6px var(--card), 0 0 0 8px var(--border);
+      transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    }
+
+    .wheel-pointer {
+      position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent;
+      border-top: 28px solid var(--text); z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .wheel-center {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 48px; height: 48px; border-radius: 50%; background: var(--card);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15); display: flex; align-items: center;
+      justify-content: center; z-index: 5;
+    }
+
+    .spin-controls {
+      display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 400px;
+    }
+
+    .spin-input-group {
+      display: flex; align-items: center; gap: 12px; background: var(--card);
+      padding: 8px 16px; border-radius: 12px; border: 1px solid var(--border-light);
+    }
+
+    .spin-input-group label {
+      font-size: 13px; font-weight: 600; color: var(--text-secondary); white-space: nowrap;
+    }
+
+    .spin-input-group input {
+      width: 60px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 16px; font-weight: 700; font-family: inherit; text-align: center;
+      background: var(--bg); color: var(--text); outline: none;
+    }
+
+    .spin-input-group input:focus { border-color: var(--accent); }
+
+    .spin-btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px;
+      border: none; border-radius: 14px; font-size: 16px; font-weight: 700;
+      font-family: inherit; background: var(--text); color: #fff; cursor: pointer;
+      transition: all 0.2s ease; box-shadow: var(--shadow);
+    }
+
+    .spin-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+    .spin-btn:active { transform: translateY(0); }
+    .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .spin-result {
+      background: var(--card); border-radius: 16px; padding: 24px; width: 100%;
+      max-width: 400px; text-align: center; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow); display: none;
+    }
+
+    .spin-result.show { display: block; animation: fadeInUp 0.4s ease; }
+
+    .spin-result-label {
+      font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-tertiary); margin-bottom: 8px;
+    }
+
+    .spin-result-value {
+      font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .spin-result-sub {
+      font-size: 13px; color: var(--text-secondary);
+    }
+
+    .spin-history {
+      width: 100%; max-width: 400px; margin-top: 8px;
+    }
+
+    .spin-history-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-tertiary); margin-bottom: 10px;
+    }
+
+    .spin-history-list {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+
+    .spin-history-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: var(--card); border-radius: 10px;
+      border: 1px solid var(--border-light); font-size: 13px;
+    }
+
+    .spin-history-item .num {
+      font-weight: 700; color: var(--text-tertiary); font-size: 11px;
+      background: var(--bg); padding: 2px 8px; border-radius: 6px;
+    }
+
+    .spin-history-item .name { font-weight: 600; color: var(--text); }
+
+    @media (max-width: 768px) {
+      .navbar-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .hero { padding: 100px 20px 40px; }
+      .hero h1 { font-size: 36px; letter-spacing: -1px; }
+      .hero p { font-size: 15px; }
+      .tactics-grid { grid-template-columns: 1fr; }
+      .modal { max-height: 90vh; border-radius: 16px; }
+      .modal-header { padding: 20px 20px 14px; }
+      .modal-body { padding: 20px 20px 28px; }
+      .filter-row { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; }
+      .filter-btn { flex-shrink: 0; }
+      .wheel-wrapper { width: 300px; height: 300px; }
+      .wheel-canvas { width: 300px; height: 300px; }
+    }
+
+    @media (max-width: 480px) {
+      .navbar-inner { padding: 0 16px; height: 48px; }
+      .navbar-brand { font-size: 16px; }
+      .hero { padding: 80px 16px 32px; }
+      .hero h1 { font-size: 28px; letter-spacing: -0.5px; margin-bottom: 12px; }
+      .hero p { font-size: 14px; margin-bottom: 24px; }
+      .hero-search input { padding: 12px 16px 12px 44px; font-size: 14px; }
+      .filter-section { padding: 0 16px 32px; }
+      .filter-btn { padding: 6px 14px; font-size: 12px; }
+      .tactics-section { padding: 0 16px 60px; }
+      .section-header h2 { font-size: 20px; }
+      .tactic-card { padding: 20px; }
+      .card-top { flex-direction: column; gap: 12px; }
+      .card-formation { align-self: flex-start; }
+      .manager-avatar { width: 40px; height: 40px; }
+      .tactic-title { font-size: 15px; }
+      .card-desc { font-size: 12px; margin-bottom: 12px; }
+      .tag { padding: 3px 8px; font-size: 10px; }
+      .modal-overlay { padding: 0; }
+      .modal { max-width: 100%; max-height: 100vh; border-radius: 0; }
+      .modal-header { padding: 16px 16px 12px; }
+      .modal-avatar { width: 44px; height: 44px; }
+      .modal-title { font-size: 18px; }
+      .modal-formation-badge { font-size: 13px; padding: 3px 10px; }
+      .modal-body { padding: 16px 16px 24px; }
+      .modal-desc { font-size: 13px; margin-bottom: 20px; }
+      .settings-group { margin-bottom: 20px; }
+      .settings-group-title { font-size: 11px; margin-bottom: 12px; }
+      .setting-row { padding: 8px 0; }
+      .setting-label { font-size: 12px; gap: 6px; }
+      .setting-label svg { width: 12px; height: 12px; }
+      .value-pill { font-size: 11px; padding: 2px 8px; }
+      .bar-track { width: 60px; }
+      .setting-value { font-size: 12px; }
+      .instruction-item { padding: 10px 12px; }
+      .instruction-name { font-size: 12px; }
+      .instruction-toggle { font-size: 10px; padding: 2px 8px; }
+      .instruction-desc { font-size: 11px; padding-left: 20px; }
+      .notes-box ul li { font-size: 12px; }
+      .spin-page { padding: 80px 16px 60px; }
+      .spin-header h1 { font-size: 28px; }
+      .spin-header p { font-size: 14px; }
+      .spin-tabs { gap: 6px; }
+      .spin-tab { padding: 8px 16px; font-size: 13px; }
+      .wheel-wrapper { width: 280px; height: 280px; }
+      .wheel-canvas { width: 280px; height: 280px; }
+      .spin-controls { gap: 12px; }
+      .spin-input-group { padding: 6px 12px; }
+      .spin-input-group label { font-size: 12px; }
+      .spin-input-group input { width: 50px; padding: 6px 10px; font-size: 14px; }
+      .spin-btn { padding: 12px 24px; font-size: 14px; }
+      .spin-result { padding: 20px; }
+      .spin-result-label { font-size: 11px; }
+      .spin-result-value { font-size: 18px; }
+      .spin-result-sub { font-size: 12px; }
+      .spin-history { margin-top: 16px; }
+      .spin-history-title { font-size: 11px; }
+      .spin-history-item { padding: 8px 12px; font-size: 12px; }
+      .formation-visual { padding: 20px 12px; }
+      .player-dot { width: 24px; height: 24px; font-size: 8px; }
+      .formation-lines { gap: 16px; }
+    }
+
+    @media (max-width: 360px) {
+      .hero h1 { font-size: 24px; }
+      .wheel-wrapper { width: 260px; height: 260px; }
+      .wheel-canvas { width: 260px; height: 260px; }
+      .tactic-card { padding: 16px; }
+      .modal-title { font-size: 16px; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tactic-card { animation: fadeInUp 0.5s ease forwards; opacity: 0; }
+    .tactic-card:nth-child(1) { animation-delay: 0.05s; }
+    .tactic-card:nth-child(2) { animation-delay: 0.1s; }
+    .tactic-card:nth-child(3) { animation-delay: 0.15s; }
+    .tactic-card:nth-child(4) { animation-delay: 0.2s; }
+    .tactic-card:nth-child(5) { animation-delay: 0.25s; }
+    .tactic-card:nth-child(6) { animation-delay: 0.3s; }
+    .tactic-card:nth-child(7) { animation-delay: 0.35s; }
+    .tactic-card:nth-child(8) { animation-delay: 0.4s; }
+    .tactic-card:nth-child(9) { animation-delay: 0.45s; }
+    .tactic-card:nth-child(10) { animation-delay: 0.5s; }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .mobile-menu-btn:hover { background: rgba(0,0,0,0.04); }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      padding: 8px 16px 16px;
+      border-top: 1px solid var(--border-light);
+      background: rgba(245,245,247,0.95);
+      backdrop-filter: blur(20px);
+    }
+
+    .mobile-menu.show { display: flex; }
+
+    .mobile-menu a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 12px 16px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mobile-menu a:hover, .mobile-menu a.active {
+      color: var(--text);
+      background: rgba(0,0,0,0.04);
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" onclick="showPage('tactics')">
+      <i data-lucide="shield-check" style="width:22px;height:22px"></i>
+      Tactics Vault
+    </a>
+    <div class="navbar-links">
+      <a class="active" onclick="showPage('tactics')">Tactics</a>
+      <a onclick="showPage('spin')">Spin Wheel</a>
+    </div>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <i data-lucide="menu" style="width:24px;height:24px"></i>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a class="active" onclick="showPage('tactics'); toggleMobileMenu()">Tactics</a>
+    <a onclick="showPage('spin'); toggleMobileMenu()">Spin Wheel</a>
+  </div>
+</nav>
+
+<div class="page active" id="page-tactics">
+  <section class="hero">
+    <div class="hero-badge"><i data-lucide="zap" style="width:12px;height:12px"></i> PES 2017 Edition</div>
+    <h1>Master Every Tactic</h1>
+    <p>Advanced settings from the world's greatest managers, precisely configured for Pro Evolution Soccer 2017.</p>
+    <div class="hero-search">
+      <i data-lucide="search" style="width:18px;height:18px"></i>
+      <input type="text" id="searchInput" placeholder="Search manager, tactic, or formation..." oninput="searchTactics(this.value)">
+    </div>
+  </section>
+
+  <section class="filter-section">
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setFilter(this, 'all')"><i data-lucide="layout-grid" style="width:14px;height:14px"></i> All</button>
+      <button class="filter-btn" onclick="setFilter(this, 'possession')"><i data-lucide="circle-dot" style="width:14px;height:14px"></i> Possession</button>
+      <button class="filter-btn" onclick="setFilter(this, 'counter')"><i data-lucide="zap" style="width:14px;height:14px"></i> Counter Attack</button>
+      <button class="filter-btn" onclick="setFilter(this, 'pressing')"><i data-lucide="flame" style="width:14px;height:14px"></i> High Press</button>
+      <button class="filter-btn" onclick="setFilter(this, 'defensive')"><i data-lucide="shield" style="width:14px;height:14px"></i> Defensive</button>
+      <button class="filter-btn" onclick="setFilter(this, 'wide')"><i data-lucide="move-horizontal" style="width:14px;height:14px"></i> Wide Play</button>
+    </div>
+  </section>
+
+  <section class="tactics-section">
+    <div class="section-header">
+      <h2>Tactics Collection</h2>
+      <span class="tactics-count" id="tacticsCount"></span>
+    </div>
+    <div class="tactics-grid" id="tacticsGrid"></div>
+    <div class="empty-state" id="emptyState">
+      <i data-lucide="search-x" style="width:48px;height:48px"></i>
+      <h3>No tactics found</h3>
+      <p>Try a different search term or filter.</p>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="page-spin">
+  <div class="spin-page">
+    <div class="spin-header">
+      <h1>Spin the Wheel</h1>
+      <p>Let fate decide your next tactic or team.</p>
+    </div>
+
+    <div class="spin-tabs">
+      <button class="spin-tab active" onclick="switchSpinTab('tactics')"><i data-lucide="clipboard-list" style="width:16px;height:16px"></i> Tactics</button>
+      <button class="spin-tab" onclick="switchSpinTab('teams')"><i data-lucide="flag" style="width:16px;height:16px"></i> Teams</button>
+    </div>
+
+    <div class="spin-container">
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <canvas class="wheel-canvas" id="wheelCanvas" width="760" height="760"></canvas>
+        <div class="wheel-center"><i data-lucide="target" style="width:20px;height:20px;color:var(--text-tertiary)"></i></div>
+      </div>
+
+      <div class="spin-controls">
+        <div class="spin-input-group">
+          <label>Number of Spins</label>
+          <input type="number" id="spinCount" value="1" min="1" max="20">
+        </div>
+        <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
+          <i data-lucide="rotate-cw" style="width:18px;height:18px"></i> Spin Now
+        </button>
+      </div>
+
+      <div class="spin-result" id="spinResult">
+        <div class="spin-result-label" id="spinResultLabel">Result</div>
+        <div class="spin-result-value" id="spinResultValue"></div>
+        <div class="spin-result-sub" id="spinResultSub"></div>
+      </div>
+
+      <div class="spin-history" id="spinHistory" style="display:none">
+        <div class="spin-history-title">Spin History</div>
+        <div class="spin-history-list" id="spinHistoryList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-avatar" id="modalAvatar"></div>
+        <div>
+          <div class="modal-manager" id="modalManager"></div>
+          <div class="modal-title" id="modalTitle"></div>
+          <div class="modal-formation-badge" id="modalFormation"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<footer class="footer"><p>PES 2017 Tactics Vault &mdash; Built for the beautiful game.</p></footer>
+
+<script>
+const instructionDescs = {
+  "Tiki-Taka": "Pemain akan mendekati satu sama lain untuk mempermudah operan pendek (passing segitiga). Cocok untuk menguasai penguasaan bola.",
+  "False 9": "Penyerang tengah (CF) akan mundur menjemput bola, mengelabui bek lawan, dan membuka ruang bagi gelandang atau pemain sayap untuk menusuk ke kotak penalti.",
+  "Wing Rotation": "Pemain sayap secara bergantian bertukar posisi dengan penyerang tengah atau sayap lainnya untuk membingungkan bek lawan.",
+  "Hug the Touchline": "Pemain sayap bermain lebih melebar ke sisi lapangan. Sangat efektif jika Anda sering melakukan umpan silang (crossing).",
+  "Attack Full-backs": "Bek kanan/kiri akan maju jauh ke depan saat menyerang untuk menambah opsi umpan di area pertahanan lawan.",
+  "Centering Targets": "Gelandang serang atau penyerang akan bergerak masuk ke kotak penalti untuk menyambut umpan silang.",
+  "Counter Targets": "Satu atau dua penyerang akan tetap berada di depan (tidak ikut mundur saat bertahan) untuk bersiap melakukan serangan balik cepat.",
+  "Gegenpress": "Pemain akan langsung menekan pemain lawan secara agresif begitu kehilangan bola. Efektif merebut bola cepat, tetapi sangat menguras stamina.",
+  "Defensive Line": "Mengatur posisi garis pertahanan tim. Apakah bermain sangat rapat di kotak penalti (Deep Line) atau melakukan perangkap offside dengan garis pertahanan tinggi (Frontline Pressure).",
+  "Center-Backs Push Up": "Bek tengah akan ikut maju ke depan saat tim Anda dalam keadaan tertinggal di menit-menit akhir pertandingan.",
+  "Deep Defensive Line": "Pemain bertahan akan mundur lebih dalam ke dekat kotak penalti untuk mencegah umpan terobosan lawan.",
+  "Marking": "Anda dapat menugaskan pemain bertahan tertentu untuk melakukan penjagaan ketat (Tight Marking) pada pemain kunci atau striker lawan."
+};
+
+const instructionIcons = {
+  "Tiki-Taka": "triangle", "False 9": "arrow-down-to-line", "Wing Rotation": "refresh-ccw",
+  "Hug the Touchline": "move-horizontal", "Attack Full-backs": "arrow-up-right",
+  "Centering Targets": "crosshair", "Counter Targets": "zap", "Gegenpress": "flame",
+  "Defensive Line": "ruler", "Center-Backs Push Up": "arrow-up-from-line",
+  "Deep Defensive Line": "shield", "Marking": "user-check"
+};
+
+const allAtkInstr = ["Tiki-Taka", "False 9", "Wing Rotation", "Hug the Touchline", "Attack Full-backs", "Centering Targets", "Counter Targets"];
+const allDefInstr = ["Gegenpress", "Defensive Line", "Center-Backs Push Up", "Deep Defensive Line", "Marking"];
+
+const tactics = [
+  { id:1, manager:"Jurgen Klopp", title:"Gegenpressing", formation:"4-3-3", formationNums:[1,4,3,3], color:"#e53935", icon:"flame", style:"pressing", tags:["press","attack","counter"], desc:"Relentless high-intensity pressing to win the ball back within seconds of losing it. Overwhelms opponents with aggressive counter-pressing and rapid transitions.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Use high stamina players in midfield","Full-backs should have high work rate","Striker must press from the front","Best with fast, physical players","Set team pressing to maximum intensity"] },
+  { id:2, manager:"Pep Guardiola", title:"Tiki-Taka Possession", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"circle-dot", style:"possession", tags:["possess","attack"], desc:"Dominate possession with short intricate passing, positional play, and patient build-up. Control the game tempo and suffocate opponents through ball retention.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:4,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["All players need excellent passing ability","Ball-playing centre-backs are essential","False 9 drops deep to create overloads","Patience is key - wait for the opening","Set support range to medium for balanced spacing"] },
+  { id:3, manager:"Jose Mourinho", title:"Defensive Masterclass", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#37474f", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Park the bus with two solid defensive midfielders, absorb pressure, and strike on devastating counter attacks. Defensive solidity above all else.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:3,compactness:9,sweeper:"On"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Two CDMs are the backbone of this system","Fast wingers essential for counters","Target man striker to hold up play","Set compactness to maximum","Let opponents have the ball, not the space"] },
+  { id:4, manager:"Antonio Conte", title:"3-4-3 Wing-Back System", formation:"3-4-3", formationNums:[1,3,4,3], color:"#1b5e20", icon:"move-horizontal", style:"wide", tags:["wide","attack","press"], desc:"Three centre-backs with explosive wing-backs providing width. Direct attacking football with numerical superiority in wide areas and central overloads.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wing-backs need exceptional stamina (90+)","Three CBs must be comfortable on the ball","Central striker should be clinical","Inside forwards cut inside to create space","Transition speed is crucial"] },
+  { id:5, manager:"Diego Simeone", title:"Cholismo", formation:"4-4-2", formationNums:[1,4,4,2], color:"#b71c1c", icon:"shield", style:"defensive", tags:["defend","press","counter"], desc:"Ultra-compact 4-4-2 with intense collective pressing. Two banks of four that shift as a unit, making the team nearly impossible to break down.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:4,compactness:10,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Maximum compactness - all 10 players behind the ball","Two strikers must work defensively","Set pieces are a major goal source","Physical and aggressive players preferred","Patience in attack, explosiveness in transition"] },
+  { id:6, manager:"Carlo Ancelotti", title:"Balanced Elegance", formation:"4-3-2-1", formationNums:[1,4,3,2,1], color:"#4a148c", icon:"crown", style:"possession", tags:["possess","attack"], desc:"Christmas Tree formation with perfect balance between attack and defense. Fluid positional interchange with technically gifted midfielders controlling every phase.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Two attacking midfielders behind the striker","Deep-lying playmaker as the pivot","Full-backs provide width in attack","Versatile players who can play multiple positions","Adaptable system - can shift to defensive easily"] },
+  { id:7, manager:"Thomas Tuchel", title:"Positional Revolution", formation:"3-4-2-1", formationNums:[1,3,4,2,1], color:"#0d47a1", icon:"hexagon", style:"possession", tags:["possess","press","wide"], desc:"Asymmetric build-up with three CBs, inverted wing-backs, and dual number 10s. Extremely structured positional play with calculated pressing triggers.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:4,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Ball-playing CBs are non-negotiable","Wing-backs must be tactically intelligent","Two AMFs create overloads between the lines","Build-up through the goalkeeper","Pressing triggers: backward pass, poor touch"] },
+  { id:8, manager:"Mikel Arteta", title:"Inverted Full-Back System", formation:"4-3-3", formationNums:[1,4,3,3], color:"#e53935", icon:"rotate-3d", style:"possession", tags:["possess","attack","press"], desc:"Full-backs invert into midfield to create numerical superiority. Structured build-up with positional rotations and aggressive rest-defense positioning.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Full-backs need midfield-level passing ability","Single pivot CDM anchors the build-up","Wingers stay wide to stretch the defense","GK must be comfortable with the ball at feet","Rest-defense structure prevents counters"] },
+  { id:9, manager:"Massimiliano Allegri", title:"Italian Pragmatism", formation:"4-4-2", formationNums:[1,4,4,2], color:"#212121", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Classic Italian catenaccio philosophy adapted for modern football. Solid defensive structure, game management expertise, and clinical finishing on limited chances.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:3,compactness:9,sweeper:"On"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Two solid centre-backs are the foundation","One creative midfielder for through balls","Target man + poacher striker partnership","Game management: slow down when leading","Set compactness high and defensive line deep"] },
+  { id:10, manager:"Jurgen Klopp", title:"Heavy Metal Football", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"flame", style:"pressing", tags:["press","attack","wide"], desc:"Full-throttle attacking football with wing-backs bombing forward, a creative number 10, and a pressing forward. Chaos and intensity personified.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:7,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Double pivot provides defensive cover","Number 10 is the creative hub","Wingers must track back and press","Full-backs overlap constantly","High intensity requires deep squad rotation"] },
+  { id:11, manager:"Xavi Hernandez", title:"Total Possession", formation:"4-3-3", formationNums:[1,4,3,3], color:"#880e4f", icon:"circle-dot", style:"possession", tags:["possess","attack","wide"], desc:"Barcelona DNA taken to the extreme. Relentless possession with high defensive line, width from wingers, and midfielders who never lose the ball.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:9,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Highest possible defensive line","All players must be technically excellent","Wingers hug the touchline for width","Midfield triangle controls everything","Press immediately upon losing possession"] },
+  { id:12, manager:"Roberto De Zerbi", title:"Build-Up Provocation", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#00695c", icon:"hexagon", style:"possession", tags:["possess","press","attack"], desc:"Provoke the opponent's press with risky build-up from the back, then exploit the spaces left behind. Vertical possession football at its finest.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["GK must be elite with ball at feet","CBs bait the press then play through it","Double pivot drops deep to receive","Number 10 finds pockets between lines","High risk, high reward philosophy"] },
+  { id:13, manager:"Gian Piero Gasperini", title:"Atalanta 3-4-1-2", formation:"3-4-1-2", formationNums:[1,3,4,1,2], color:"#1a237e", icon:"move-horizontal", style:"wide", tags:["wide","attack","press"], desc:"Man-marking across the pitch with aggressive wing-backs and dual strikers. A unique system that overwhelms opponents with intensity and tactical discipline.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:7,compactness:5,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Marking":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Every player must be physically exceptional","Wing-backs are the key attacking outlet","Two strikers with complementary styles","Man-marking requires extreme discipline","High pressing from the front two"] },
+  { id:14, manager:"Carlo Ancelotti", title:"Champions League DNA", formation:"4-3-3", formationNums:[1,4,3,3], color:"#4a148c", icon:"trophy", style:"counter", tags:["counter","attack","possess"], desc:"Adaptable and pragmatic 4-3-3 that can switch between possession and devastating counter attacks. Built for knockout football with world-class individuals.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Hug the Touchline":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["World-class winger on each flank","Complete striker who can finish anything","Midfield trio with balanced roles","Solid defensive foundation first","Know when to attack and when to sit back"] },
+  { id:15, manager:"Simone Inzaghi", title:"Inter 3-5-2 System", formation:"3-5-2", formationNums:[1,3,5,2], color:"#01579b", icon:"layers", style:"wide", tags:["wide","possess","attack"], desc:"Three CBs with wing-backs providing all the width. A five-man midfield dominates the centre while two strikers combine with intelligent movement.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Centering Targets":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wing-backs are the engine of the team","Central midfielder is the metronome","Striker partnership: big man + quick man","Three CBs allow wing-backs to push forward","Width comes exclusively from wing-backs"] },
+  { id:16, manager:"Arsene Wenger", title:"Invincibles 4-4-2", formation:"4-4-2", formationNums:[1,4,4,2], color:"#e53935", icon:"crown", style:"counter", tags:["counter","attack","wide"], desc:"The legendary Arsenal system. Fluid attacking movement with a deep-lying forward and a poacher. Quick transitions from defense to attack with pace on the wings.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["One striker drops deep, one stays high","Wingers with pace and crossing ability","Box-to-box midfielder paired with a holder","Quick transitions are the key weapon","Attacking full-backs provide extra width"] },
+  { id:17, manager:"Rafa Benitez", title:"Tactical Discipline 4-2-3-1", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#1a237e", icon:"shield", style:"defensive", tags:["defend","counter","press"], desc:"Meticulously organized with double pivot protection, a creative number 10, and disciplined wide players who tuck in defensively. Built for big European nights.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:4,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Two holding midfielders protect the back four","Number 10 is the sole creative outlet","Wingers must track back diligently","Clinical striker who converts limited chances","Perfect for underdog vs top team scenarios"] },
+  { id:18, manager:"Jurgen Klopp", title:"Full-Back Overload", formation:"4-3-3", formationNums:[1,4,3,3], color:"#d32f2f", icon:"move-horizontal", style:"wide", tags:["wide","press","attack"], desc:"Trent Alexander-Arnold style full-back system. Overlapping runs, pinpoint crosses, and midfield runners flooding the box.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:7,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Centering Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Full-backs need elite crossing (90+)","False 9 drops deep to create space for runners","Central midfielders make late runs into the box","Set piece delivery from full-backs is key","High defensive line requires fast centre-backs"] },
+  { id:19, manager:"Xabi Alonso", title:"Leverkusen Invincibles", formation:"3-4-2-1", formationNums:[1,3,4,2,1], color:"#e53935", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"The unbeaten Bayer Leverkusen system. Fluid 3-4-2-1 with wing-backs providing width, dual 10s creating overloads, and a relentless never-say-die mentality.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wing-backs are the primary width providers","Two AMFs drift into half-spaces","Striker must be clinical and mobile","Three CBs build up patiently from the back","Late goals mentality - never give up until the whistle"] },
+  { id:20, manager:"Luis Enrique", title:"Spanish Possession Fury", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"flame", style:"possession", tags:["possess","press","attack"], desc:"Spain and PSG's high-octane possession system. Dominant ball retention combined with aggressive pressing and quick vertical combinations.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["All players must press intensely without the ball","False 9 or mobile striker drops into midfield","Wingers cut inside, full-backs provide width","GK acts as an extra outfield player in build-up","High tempo possession - not sideways for the sake of it"] },
+  { id:21, manager:"Andoni Iraola", title:"Bournemouth Chaos Press", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#e53935", icon:"flame", style:"pressing", tags:["press","counter","attack"], desc:"Relentless front-foot pressing from Bournemouth. High-intensity man-oriented press that forces turnovers in dangerous areas.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Every player must have elite stamina (85+)","Press in packs - never press alone","Number 10 leads the pressing from the front","Quick vertical passes after winning the ball","Accept defensive vulnerability for attacking intensity"] },
+  { id:22, manager:"Thiago Motta", title:"Positional Fluidity", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1a237e", icon:"hexagon", style:"possession", tags:["possess","attack"], desc:"Juventus and Bologna's revolutionary positional system. Players interchange fluidly with the GK joining the build-up line.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:6,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["GK must have elite passing and composure","All 11 players participate in build-up","Positional rotations confuse man-marking systems","Patience in possession - wait for the right moment","Technically gifted players in every position"] },
+  { id:23, manager:"Ruben Amorim", title:"Sporting 3-4-3 Press", formation:"3-4-3", formationNums:[1,3,4,3], color:"#1b5e20", icon:"shield-check", style:"pressing", tags:["press","wide","attack"], desc:"The Sporting CP and Manchester United system. Aggressive 3-4-3 with wing-backs providing width, a compact midfield block, and coordinated pressing.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Three CBs must be comfortable in 1v1 situations","Wing-backs need pace and stamina (88+)","Front three press as a coordinated unit","Central midfield duo covers the wide spaces","Striker must be a complete forward - press and score"] },
+  { id:24, manager:"Arne Slot", title:"Liverpool Controlled Chaos", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"zap", style:"pressing", tags:["press","possess","attack"], desc:"Liverpool's evolution under Slot. Maintains the pressing DNA but adds more controlled possession and positional structure.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Double pivot provides balance between press and cover","Number 10 is the creative heartbeat","Wingers must press and create chances","Full-backs are more controlled than under Klopp","Transition speed remains the key weapon"] },
+  { id:25, manager:"Ange Postecoglou", title:"Angeball", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"zap", style:"pressing", tags:["press","attack","wide"], desc:"All-out attacking football with inverted full-backs, high line, and relentless pressing. Never park the bus, always go forward.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:9,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Highest possible defensive line - trust the offside trap","Full-backs invert into midfield for overloads","Wingers stay wide and take on defenders","Accept vulnerability to counter attacks","Attacking mentality regardless of score or opponent"] },
+  { id:26, manager:"Enzo Maresca", title:"Chelsea Build-Up Mastery", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#0d47a1", icon:"rotate-3d", style:"possession", tags:["possess","attack"], desc:"Chelsea's possession-based system under Maresca. Patient build-up with inverted full-backs, a double pivot, and creative number 10.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["One full-back inverts, the other stays wide","Double pivot drops deep to receive from CBs","Number 10 operates between the lines","GK must be comfortable playing out under pressure","Patience in build-up, explosiveness in final third"] },
+  { id:27, manager:"Julian Nagelsmann", title:"Tactical Innovation 3-2-4-1", formation:"3-2-4-1", formationNums:[1,3,2,4,1], color:"#212121", icon:"hexagon", style:"pressing", tags:["press","possess","attack"], desc:"Germany and Bayern's tactical innovator. Asymmetric formations, position-specific instructions, and aggressive pressing.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Players must be tactically intelligent and adaptable","Formation shifts mid-game based on opponent","Three CBs with one ball-playing libero","Four attacking midfielders create constant overloads","Pressing triggers are pre-planned and coordinated"] },
+  { id:28, manager:"Luis de la Fuente", title:"Spain Euro Champions", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"trophy", style:"possession", tags:["possess","wide","attack"], desc:"Spain's Euro 2024 winning system. Classic 4-3-3 with wingers who stay wide, a creative midfield trio, and controlled vertical possession.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:4,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wingers stay wide to stretch the defense","Midfield trio: one holder, two creators","Full-backs overlap to create 2v1 on the flanks","More vertical than classic Spain tiki-taka","Young, dynamic players with high work rate"] },
+  { id:29, manager:"Sergio Conceicao", title:"Porto Intensity", formation:"4-4-2", formationNums:[1,4,4,2], color:"#0d47a1", icon:"flame", style:"pressing", tags:["press","wide","counter"], desc:"Porto's trademark intensity. Compact 4-4-2 with aggressive pressing, quick wide attacks, and two strikers who work tirelessly.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Marking":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Two strikers must press relentlessly","Wingers provide width and pace on the counter","Compact midfield block shifts as a unit","Set pieces are a major source of goals","Physical and aggressive mentality throughout"] },
+  { id:30, manager:"Simone Inzaghi", title:"Inter Champions 3-5-2", formation:"3-5-2", formationNums:[1,3,5,2], color:"#01579b", icon:"layers", style:"counter", tags:["counter","wide","defend"], desc:"Inter Milan's Serie A and Champions League system. Three CBs with attacking wing-backs, creative midfield, and lethal strike partnership.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Defensive Line":"Frontline Pressure","Deep Defensive Line":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wing-backs are the primary attacking outlet","Striker partnership: target man + mobile forward","Central midfielder dictates tempo","Three CBs provide defensive security","Perfect for big games against possession teams"] },
+  { id:31, manager:"Pep Guardiola", title:"Man City 2025 Evolution", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#1565c0", icon:"circle-dot", style:"possession", tags:["possess","press","attack"], desc:"Guardiola's latest evolution at Manchester City. Double pivot with inverted full-backs, creative number 10, and Haaland as the focal point.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Centering Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Target man striker as the focal point","Number 10 creates chances from between the lines","One full-back inverts, one stays wide","Double pivot provides defensive security","High line with ball-playing centre-backs"] },
+  { id:32, manager:"Diego Simeone", title:"Atletico 2025 Evolution", formation:"5-3-2", formationNums:[1,5,3,2], color:"#b71c1c", icon:"shield", style:"defensive", tags:["defend","counter","press"], desc:"Simeone's evolved Atletico system. Five-man defense with attacking wing-backs, creative midfield trio, and two strikers.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:3,compactness:10,sweeper:"On"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Five defenders provide maximum security","Wing-backs push forward on the counter","Two strikers with complementary styles","Maximum compactness when defending","Set pieces remain a major weapon"] },
+  { id:33, manager:"Unai Emery", title:"Villarreal & Villa Masterclass", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#6a1b9a", icon:"trophy", style:"counter", tags:["counter","defend","press"], desc:"Europa League king's system. Organized 4-2-3-1 with disciplined double pivot, creative number 10, and clinical counter attacks. Master of knockout football.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"False 9":true},defInstructions:{"Defensive Line":"Frontline Pressure","Deep Defensive Line":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Double pivot provides rock-solid defensive base","Number 10 is the creative engine","Wingers tuck in defensively, explode on counters","Set pieces meticulously rehearsed","Perfect for cup competitions and big games"] },
+  { id:34, manager:"Hansi Flick", title:"Bayern Sextuple Machine", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"flame", style:"pressing", tags:["press","attack","wide"], desc:"Bayern Munich's treble/sextuple winning system. Devastating high press, quick vertical attacks, and overwhelming intensity from every player on the pitch.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Every player must press relentlessly","Wingers provide pace and goals","Full-backs overlap at high speed","Number 10 links midfield and attack","Stamina is non-negotiable for all players"] },
+  { id:35, manager:"David Moyes", title:"Pragmatic Resilience", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#7b1fa2", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Moyes' organized and hard-working system. Compact defensive shape with quick transitions, physical presence, and set-piece threat. Built to frustrate bigger teams.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:4,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Centering Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Physical and hardworking players throughout","Two holding midfielders shield the defense","Set pieces are a primary scoring method","Fast striker to chase long balls","Discipline and organization above all else"] },
+  { id:36, manager:"Zinedine Zidane", title:"Galactico Balance", formation:"4-3-3", formationNums:[1,4,3,3], color:"#283593", icon:"crown", style:"counter", tags:["counter","possess","attack"], desc:"Zidane's Champions League winning formula. Perfect balance between defensive solidity and attacking flair. Relies on world-class individuals within a structured system.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["World-class players make the difference","Midfield trio controls tempo and transitions","Wingers provide goals and creativity","Solid defensive foundation first","Clutch mentality for big moments"] },
+  { id:37, manager:"Luis Enrique", title:"PSG Champions League", formation:"4-3-3", formationNums:[1,4,3,3], color:"#0d47a1", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"PSG's Champions League winning system. High-pressing possession with young dynamic players, quick combinations, and relentless energy throughout the squad.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Young, energetic players with high work rate","Pressing is collective and coordinated","False 9 creates space for midfield runners","GK comfortable with ball at feet","High tempo throughout the entire match"] },
+  { id:38, manager:"Zinedine Zidane", title:"Real Madrid UCL Dynasty", formation:"4-4-2 Diamond", formationNums:[1,4,4,2], color:"#283593", icon:"trophy", style:"counter", tags:["counter","attack","possess"], desc:"Three consecutive Champions League titles. Diamond midfield with Casemiro as anchor, Modric-Kroos creativity, and Ronaldo-Benzema partnership up front.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"False 9":true},defInstructions:{"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["CDM is the defensive anchor - Casemiro role","Two strikers with complementary styles","Full-backs provide width in attack","Midfield diamond controls the centre","Big game mentality is essential"] },
+  { id:39, manager:"Roberto Mancini", title:"Italy Euro 2020 Champions", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"Italy's Euro 2020 winning system. Possession-based attacking football with high pressing, fluid movement, and a new Italian identity built on ball retention.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Ball-playing centre-backs are essential","Full-backs provide width and creativity","Midfield trio presses and creates","Wingers cut inside for goal threat","Italian defensive DNA combined with modern attacking"] },
+  { id:40, manager:"Lionel Scaloni", title:"Argentina World Cup 2022", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"trophy", style:"counter", tags:["counter","press","attack"], desc:"Argentina's World Cup winning system. Built around Messi with hardworking midfielders, solid defense, and quick transitions. A team that fights for every ball.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"False 9":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Built around a world-class playmaker","Midfielders must work extremely hard","Solid defensive foundation","Quick transitions to exploit spaces","Team spirit and fighting mentality"] },
+  { id:41, manager:"Didier Deschamps", title:"France World Champions", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#1a237e", icon:"trophy", style:"counter", tags:["counter","defend","press"], desc:"France's World Cup winning formula. Solid defensive base with double pivot, explosive pace on the wings, and a clinical striker. Pragmatic and devastating.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Hug the Touchline":true},defInstructions:{"Defensive Line":"Frontline Pressure","Deep Defensive Line":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Double pivot provides defensive security","Wingers with explosive pace and dribbling","Clinical striker who finishes chances","Solid defensive shape first","Counter attacks are the primary weapon"] },
+  { id:42, manager:"Tite", title:"Brazil Jogo Bonito Modern", formation:"4-3-3", formationNums:[1,4,3,3], color:"#fdd835", icon:"flame", style:"possession", tags:["possess","attack","wide"], desc:"Brazil's modern interpretation of Jogo Bonito. Possession-based attacking football with Brazilian flair, quick combinations, and individual brilliance within a structured system.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wingers with flair and creativity","Full-backs overlap with Brazilian attacking spirit","Midfield trio balances defense and attack","Striker must be clinical and mobile","Individual brilliance within team structure"] },
+  { id:43, manager:"Hansi Flick", title:"Barcelona High Press", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"flame", style:"pressing", tags:["press","possess","attack"], desc:"Flick's Barcelona evolution. Combines Barcelona's possession DNA with German pressing intensity. High line, quick transitions, and relentless energy.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Young players with high energy and stamina","Pressing is the foundation of the system","Possession with vertical intent","False 9 drops deep to create overloads","High defensive line requires fast centre-backs"] },
+  { id:44, manager:"Unai Emery", title:"Arsenal Europa League", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#e53935", icon:"trophy", style:"counter", tags:["counter","defend","wide"], desc:"Emery's Europa League expertise at Arsenal. Organized defensive structure with quick wide attacks and set-piece mastery. Built for European knockout football.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Disciplined defensive shape","Wingers provide pace on the counter","Set pieces are meticulously planned","Full-backs provide width in attack","Experience in knockout football is key"] },
+  { id:45, manager:"Gareth Southgate", title:"England Modern Era", formation:"3-4-3", formationNums:[1,3,4,3], color:"#e53935", icon:"trophy", style:"counter", tags:["counter","wide","defend"], desc:"England's modern approach under Southgate. Three CBs with attacking wing-backs, organized midfield, and quick transitions. Built for tournament football.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Defensive Line":"Frontline Pressure","Deep Defensive Line":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Three CBs provide defensive security","Wing-backs are the primary attacking outlet","Set pieces are a major weapon","Organized and disciplined approach","Tournament mentality and resilience"] }
+];
+
+const famousTeams = [
+  {name:"Real Madrid",country:"Spain",color:"#283593"},
+  {name:"Barcelona",country:"Spain",color:"#a50044"},
+  {name:"Manchester City",country:"England",color:"#6cabdd"},
+  {name:"Liverpool",country:"England",color:"#c62828"},
+  {name:"Bayern Munich",country:"Germany",color:"#c62828"},
+  {name:"PSG",country:"France",color:"#0d47a1"},
+  {name:"Inter Milan",country:"Italy",color:"#01579b"},
+  {name:"AC Milan",country:"Italy",color:"#c62828"},
+  {name:"Juventus",country:"Italy",color:"#212121"},
+  {name:"Atletico Madrid",country:"Spain",color:"#b71c1c"},
+  {name:"Arsenal",country:"England",color:"#e53935"},
+  {name:"Chelsea",country:"England",color:"#0d47a1"},
+  {name:"Manchester United",country:"England",color:"#c62828"},
+  {name:"Tottenham",country:"England",color:"#1a237e"},
+  {name:"Borussia Dortmund",country:"Germany",color:"#fdd835"},
+  {name:"Napoli",country:"Italy",color:"#1565c0"},
+  {name:"AS Roma",country:"Italy",color:"#b71c1c"},
+  {name:"Benfica",country:"Portugal",color:"#c62828"},
+  {name:"Porto",country:"Portugal",color:"#0d47a1"},
+  {name:"Ajax",country:"Netherlands",color:"#c62828"},
+  {name:"Bayer Leverkusen",country:"Germany",color:"#c62828"},
+  {name:"RB Leipzig",country:"Germany",color:"#c62828"},
+  {name:"Atalanta",country:"Italy",color:"#1a237e"},
+  {name:"Real Sociedad",country:"Spain",color:"#1565c0"},
+  {name:"Sevilla",country:"Spain",color:"#c62828"},
+  {name:"Villarreal",country:"Spain",color:"#fdd835"},
+  {name:"Sporting CP",country:"Portugal",color:"#1b5e20"},
+  {name:"Celtic",country:"Scotland",color:"#1b5e20"},
+  {name:"Galatasaray",country:"Turkey",color:"#e53935"},
+  {name:"Fenerbahce",country:"Turkey",color:"#fdd835"},
+  {name:"Brazil",country:"National Team",color:"#fdd835"},
+  {name:"Argentina",country:"National Team",color:"#1565c0"},
+  {name:"France",country:"National Team",color:"#1a237e"},
+  {name:"Spain",country:"National Team",color:"#c62828"},
+  {name:"Germany",country:"National Team",color:"#212121"},
+  {name:"England",country:"National Team",color:"#e53935"},
+  {name:"Italy",country:"National Team",color:"#1565c0"},
+  {name:"Netherlands",country:"National Team",color:"#e65100"},
+  {name:"Portugal",country:"National Team",color:"#1b5e20"},
+  {name:"Belgium",country:"National Team",color:"#c62828"}
+];
+
+let currentFilter = 'all';
+let searchQuery = '';
+let spinTab = 'tactics';
+let spinHistory = [];
+let isSpinning = false;
+let currentRotation = 0;
+
+function getTagClass(tag) { const m={attack:'tag-attack',defend:'tag-defend',possess:'tag-possess',counter:'tag-counter',press:'tag-press',wide:'tag-wide'}; return m[tag]||'tag-possess'; }
+function getTagLabel(tag) { const m={attack:'Attacking',defend:'Defensive',possess:'Possession',counter:'Counter',press:'High Press',wide:'Wide Play'}; return m[tag]||tag; }
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.navbar-links a, .mobile-menu a').forEach(a => {
+    a.classList.remove('active');
+    if (a.textContent.trim().toLowerCase().includes(page === 'tactics' ? 'tactic' : 'spin')) {
+      a.classList.add('active');
+    }
+  });
+  if (page === 'spin') { drawWheel(); }
+}
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('show');
+}
+
+function renderCards() {
+  const grid = document.getElementById('tacticsGrid');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('tacticsCount');
+
+  let filtered = tactics.filter(t => {
+    const matchFilter = currentFilter === 'all' || t.style === currentFilter || t.tags.includes(currentFilter);
+    const matchSearch = searchQuery === '' || t.manager.toLowerCase().includes(searchQuery) || t.title.toLowerCase().includes(searchQuery) || t.formation.toLowerCase().includes(searchQuery) || t.tags.some(tag => tag.includes(searchQuery));
+    return matchFilter && matchSearch;
+  });
+
+  count.textContent = `${filtered.length} tactic${filtered.length !== 1 ? 's' : ''}`;
+
+  if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+
+  empty.style.display = 'none';
+  grid.innerHTML = filtered.map((t, i) => `
+    <div class="tactic-card" style="--card-accent:${t.color};animation-delay:${i * 0.05}s" onclick="openModal(${t.id})">
+      <div class="card-top">
+        <div class="manager-info">
+          <div class="manager-avatar" style="background:${t.color}"><i data-lucide="${t.icon}" style="width:22px;height:22px"></i></div>
+          <div><div class="manager-name">${t.manager}</div><div class="tactic-title">${t.title}</div></div>
+        </div>
+        <div class="card-formation">${t.formation}</div>
+      </div>
+      <div class="card-desc">${t.desc}</div>
+      <div class="card-tags">${t.tags.map(tag => `<span class="tag ${getTagClass(tag)}">${getTagLabel(tag)}</span>`).join('')}</div>
+    </div>
+  `).join('');
+
+  lucide.createIcons();
+}
+
+function setFilter(btn, filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
+
+function searchTactics(query) { searchQuery = query.toLowerCase().trim(); renderCards(); }
+
+function getBarClass(val) { if (val <= 3) return 'low'; if (val <= 6) return 'mid'; return 'high'; }
+function getBarColor(val) { if (val <= 3) return '#34c759'; if (val <= 6) return '#ff9500'; return '#ff3b30'; }
+
+function buildFormationVisual(nums) {
+  const defLabels = { 2:['CB','CB'], 3:['CB','CB','CB'], 4:['LB','CB','CB','RB'], 5:['LB','CB','CB','CB','RB'] };
+  const amfLabels = { 1:['AMF'], 2:['AMF','AMF'], 3:['LAM','AMF','RAM'], 4:['LAM','AMF','AMF','RAM'] };
+  const deepMidLabels = { 1:['CM'], 2:['CDM','CDM'], 3:['CM','CM','CM'], 4:['LM','CM','CM','RM'], 5:['LWB','CM','CDM','CM','RWB'] };
+  const atkLabels = { 1:['ST'], 2:['ST','ST'], 3:['LW','ST','RW'], 4:['LW','CF','CF','RW'] };
+
+  let lines = '';
+  const reversed = [...nums].reverse();
+  const outfieldLines = reversed.slice(0, -1);
+  const midLineCount = outfieldLines.length - 2;
+
+  for (let i = 0; i < reversed.length; i++) {
+    const count = reversed[i];
+    const isGK = i === reversed.length - 1;
+    const isDef = i === reversed.length - 2;
+    const isAtk = i === 0;
+
+    let posArr;
+    if (isGK) {
+      posArr = ['GK'];
+    } else if (isDef) {
+      posArr = defLabels[count] || Array(count).fill('CB');
+    } else if (isAtk) {
+      posArr = atkLabels[count] || Array(count).fill('ST');
+    } else {
+      if (midLineCount >= 2 && i === 1) {
+        posArr = amfLabels[count] || Array(count).fill('AMF');
+      } else {
+        posArr = deepMidLabels[count] || Array(count).fill('CM');
+      }
+    }
+
+    lines += `<div class="formation-line">${posArr.map(p => `<div class="player-dot ${p==='GK'?'gk':''}">${p}</div>`).join('')}</div>`;
+  }
+  return `<div class="formation-visual"><div class="formation-lines">${lines}</div></div>`;
+}
+
+function renderInstruction(name, isActive, type, extra) {
+  const icon = instructionIcons[name] || 'circle';
+  const desc = instructionDescs[name] || '';
+  const activeClass = isActive ? 'active' : 'inactive';
+  const typeClass = type === 'atk' ? 'atk' : 'def';
+  let subHtml = '';
+  if (name === 'Defensive Line' && isActive && extra) {
+    const isFrontline = extra === 'Frontline Pressure';
+    subHtml = `<div class="instruction-sub ${isFrontline ? 'frontline' : 'deep'}"><i data-lucide="${isFrontline ? 'arrow-up' : 'arrow-down'}" style="width:11px;height:11px"></i> ${extra}</div>`;
+  }
+  return `<div class="instruction-item ${activeClass} ${typeClass}"><div class="instruction-top"><div class="instruction-name"><i data-lucide="${icon}" style="width:14px;height:14px"></i> ${name}</div><div class="instruction-toggle ${isActive ? 'on' : 'off'}"><i data-lucide="${isActive ? 'check' : 'minus'}" style="width:10px;height:10px"></i> ${isActive ? 'ON' : 'OFF'}</div></div>${isActive ? `<div class="instruction-desc">${desc}</div>` : ''}${subHtml}</div>`;
+}
+
+function openModal(id) {
+  const t = tactics.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById('modalAvatar').style.background = t.color;
+  document.getElementById('modalAvatar').innerHTML = `<i data-lucide="${t.icon}" style="width:26px;height:26px"></i>`;
+  document.getElementById('modalManager').textContent = t.manager;
+  document.getElementById('modalTitle').textContent = t.title;
+  document.getElementById('modalFormation').innerHTML = `<i data-lucide="layout" style="width:14px;height:14px"></i> ${t.formation}`;
+
+  const s = t.settings;
+  const adv = s.advanced;
+
+  let atkHtml = '', defHtml = '';
+  allAtkInstr.forEach(name => { atkHtml += renderInstruction(name, adv.atkInstructions[name] === true, 'atk'); });
+  allDefInstr.forEach(name => {
+    let isActive = false, extra = null;
+    if (name === 'Defensive Line') { isActive = !!adv.defInstructions[name]; extra = adv.defInstructions[name] || null; }
+    else { isActive = adv.defInstructions[name] === true; }
+    defHtml += renderInstruction(name, isActive, 'def', extra);
+  });
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-desc">${t.desc}</div>
+    ${buildFormationVisual(t.formationNums)}
+    <div class="settings-group">
+      <div class="settings-group-title"><i data-lucide="sword" style="width:14px;height:14px"></i> Attacking Settings</div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="target" style="width:14px;height:14px"></i> Attacking Style</span><span class="value-pill ${s.attack.attackingStyle.includes('Possession') ? 'pill-blue' : 'pill-orange'}">${s.attack.attackingStyle}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="arrow-up-right" style="width:14px;height:14px"></i> Build Up</span><span class="value-pill ${s.attack.buildUp.includes('Short') ? 'pill-green' : 'pill-red'}">${s.attack.buildUp}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="crosshair" style="width:14px;height:14px"></i> Attacking Area</span><span class="value-pill ${s.attack.attackingArea === 'Wide' ? 'pill-teal' : 'pill-purple'}">${s.attack.attackingArea}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="users" style="width:14px;height:14px"></i> Positioning</span><span class="value-pill pill-blue">${s.attack.positioning}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="ruler" style="width:14px;height:14px"></i> Support Range</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.attack.supportRange)}" style="width:${s.attack.supportRange * 10}%"></div></div><span class="setting-value">${s.attack.supportRange}/10</span></div></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="shuffle" style="width:14px;height:14px"></i> Positional Switch</span><span class="value-pill ${s.attack.positionalSwitch === 'On' ? 'pill-green' : 'pill-red'}">${s.attack.positionalSwitch}</span></div>
+    </div>
+    <div class="settings-group">
+      <div class="settings-group-title"><i data-lucide="shield" style="width:14px;height:14px"></i> Defensive Settings</div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="shield-check" style="width:14px;height:14px"></i> Defensive Style</span><span class="value-pill ${s.defense.defensiveStyle.includes('Frontline') ? 'pill-orange' : 'pill-green'}">${s.defense.defensiveStyle}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="map-pin" style="width:14px;height:14px"></i> Containment Area</span><span class="value-pill ${s.defense.containmentArea === 'Wide' ? 'pill-teal' : 'pill-purple'}">${s.defense.containmentArea}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="flame" style="width:14px;height:14px"></i> Pressuring</span><span class="value-pill ${s.defense.pressuring === 'Aggressive' ? 'pill-red' : 'pill-green'}">${s.defense.pressuring}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="arrow-up" style="width:14px;height:14px"></i> Defensive Line</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.defense.defensiveLine)}" style="width:${s.defense.defensiveLine * 10}%;background:${getBarColor(s.defense.defensiveLine)}"></div></div><span class="setting-value">${s.defense.defensiveLine}/10</span></div></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="minimize-2" style="width:14px;height:14px"></i> Compactness</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.defense.compactness)}" style="width:${s.defense.compactness * 10}%;background:${getBarColor(s.defense.compactness)}"></div></div><span class="setting-value">${s.defense.compactness}/10</span></div></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="user-check" style="width:14px;height:14px"></i> Sweeper</span><span class="value-pill ${s.defense.sweeper === 'On' ? 'pill-green' : 'pill-red'}">${s.defense.sweeper}</span></div>
+    </div>
+    <div class="settings-group">
+      <div class="settings-group-title"><i data-lucide="sword" style="width:14px;height:14px"></i> Advanced Attacking Instructions</div>
+      ${atkHtml}
+    </div>
+    <div class="settings-group">
+      <div class="settings-group-title"><i data-lucide="shield" style="width:14px;height:14px"></i> Advanced Defensive Instructions</div>
+      ${defHtml}
+    </div>
+    <div class="settings-group">
+      <div class="settings-group-title"><i data-lucide="settings" style="width:14px;height:14px"></i> Other Settings</div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="flag" style="width:14px;height:14px"></i> Set Pieces</span><span class="value-pill pill-teal">${adv.setPieces}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="alert-triangle" style="width:14px;height:14px"></i> Offside Trap</span><span class="value-pill ${adv.offsideTrap === 'On' ? 'pill-green' : 'pill-red'}">${adv.offsideTrap}</span></div>
+    </div>
+    <div class="settings-group">
+      <div class="settings-group-title"><i data-lucide="lightbulb" style="width:14px;height:14px"></i> Tips & Notes</div>
+      <div class="notes-box"><ul>${t.notes.map(n => `<li>${n}</li>`).join('')}</ul></div>
+    </div>
+  `;
+
+  const overlay = document.getElementById('modalOverlay');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  document.body.style.overflow = 'hidden';
+  lucide.createIcons();
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalOverlay') && e.target !== document.querySelector('.modal-close')) return;
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.remove('show');
+  setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
+}
+
+function switchSpinTab(tab) {
+  spinTab = tab;
+  spinHistory = [];
+  document.getElementById('spinHistory').style.display = 'none';
+  document.getElementById('spinResult').classList.remove('show');
+  document.querySelectorAll('.spin-tab').forEach(t => t.classList.remove('active'));
+  event.target.closest('.spin-tab').classList.add('active');
+  currentRotation = 0;
+  document.getElementById('wheelCanvas').style.transform = 'rotate(0deg)';
+  drawWheel();
+}
+
+function getWheelItems() {
+  if (spinTab === 'tactics') return tactics.map(t => ({ label: t.title, sub: t.manager, color: t.color }));
+  return famousTeams.map(t => ({ label: t.name, sub: t.country, color: t.color }));
+}
+
+function drawWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const items = getWheelItems();
+  const n = items.length;
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const r = cx - 10;
+  const arc = (2 * Math.PI) / n;
+  const offset = -Math.PI / 2 - arc / 2;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const colors = ['#0071e3','#34c759','#ff9500','#ff3b30','#af52de','#5ac8fa','#ff2d55','#ffcc00','#5856d6','#007aff','#e53935','#1b5e20','#6a1b9a','#00695c','#c62828','#1565c0','#283593','#b71c1c','#37474f','#1a237e'];
+
+  for (let i = 0; i < n; i++) {
+    const angle = i * arc + offset;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + arc);
+    ctx.closePath();
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle + arc / 2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px Inter, sans-serif';
+    const label = items[i].label.length > 18 ? items[i].label.substring(0, 16) + '...' : items[i].label;
+    ctx.fillText(label, r - 20, 5);
+    ctx.restore();
+  }
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 30, 0, 2 * Math.PI);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  ctx.strokeStyle = '#d2d2d7';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function spinWheel() {
+  if (isSpinning) return;
+
+  const count = Math.min(20, Math.max(1, parseInt(document.getElementById('spinCount').value) || 1));
+  const items = getWheelItems();
+  const n = items.length;
+  const arc = 360 / n;
+
+  let spinIndex = 0;
+
+  function doSpin() {
+    if (spinIndex >= count) {
+      isSpinning = false;
+      document.getElementById('spinBtn').disabled = false;
+      return;
+    }
+
+    isSpinning = true;
+    document.getElementById('spinBtn').disabled = true;
+
+    const winIndex = Math.floor(Math.random() * n);
+    const extraSpins = 5 + Math.floor(Math.random() * 5);
+    const targetAngle = extraSpins * 360 + (360 - winIndex * arc);
+
+    currentRotation += targetAngle;
+
+    const canvas = document.getElementById('wheelCanvas');
+    canvas.style.transition = 'none';
+    canvas.offsetHeight;
+    canvas.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+    canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+    setTimeout(() => {
+      const item = items[winIndex];
+      document.getElementById('spinResultLabel').textContent = spinTab === 'tactics' ? 'Tactic Selected' : 'Team Selected';
+      document.getElementById('spinResultValue').textContent = item.label;
+      document.getElementById('spinResultSub').textContent = item.sub;
+      document.getElementById('spinResult').classList.add('show');
+
+      spinHistory.push(item);
+      updateHistory();
+
+      spinIndex++;
+      if (spinIndex < count) {
+        setTimeout(doSpin, 800);
+      } else {
+        isSpinning = false;
+        document.getElementById('spinBtn').disabled = false;
+      }
+    }, 4200);
+  }
+
+  doSpin();
+}
+
+function updateHistory() {
+  const container = document.getElementById('spinHistory');
+  const list = document.getElementById('spinHistoryList');
+  container.style.display = 'block';
+  list.innerHTML = spinHistory.map((item, i) => `
+    <div class="spin-history-item">
+      <span class="num">#${i + 1}</span>
+      <span class="name">${item.label}</span>
+      <span style="font-size:11px;color:var(--text-tertiary)">${item.sub}</span>
+    </div>
+  `).join('');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal({target: document.getElementById('modalOverlay')}); });
+
+renderCards();
+lucide.createIcons();
+</script>
+</body>
+</html>
