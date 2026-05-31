@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PES 2017 Tactics Vault</title>
+  <title>PES 2017 Gudang Taktik</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -71,6 +71,15 @@
     }
 
     .navbar-links a:hover, .navbar-links a.active { color: var(--text); background: rgba(0,0,0,0.04); }
+
+    .lang-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 6px 10px; border-radius: 18px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); font-size: 12px; font-weight: 700;
+      font-family: inherit; cursor: pointer; transition: all 0.2s ease; min-width: 40px;
+    }
+
+    .lang-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
     .page { display: none; }
     .page.active { display: block; }
@@ -432,6 +441,18 @@
       font-size: 13px; color: var(--text-secondary);
     }
 
+    .spin-result-action {
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
+      padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600;
+      font-family: inherit; background: var(--accent); color: #fff; border: none;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+
+    .spin-result-action:hover { background: #005bb5; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,113,227,0.3); }
+
+    .spin-history-item.clickable { cursor: pointer; transition: all 0.2s ease; }
+    .spin-history-item.clickable:hover { border-color: var(--accent); background: var(--accent-light); }
+
     .spin-history {
       width: 100%; max-width: 400px; margin-top: 8px;
     }
@@ -497,6 +518,8 @@
       color: var(--text);
       background: rgba(0,0,0,0.04);
     }
+
+    .mobile-menu .lang-toggle { margin: 8px 0 0; width: 100%; }
 
     @media (max-width: 768px) {
       .navbar-links { display: none; }
@@ -612,54 +635,56 @@
   <div class="navbar-inner">
     <a class="navbar-brand" onclick="showPage('tactics')">
       <i data-lucide="shield-check" style="width:22px;height:22px"></i>
-      Tactics Vault
+      <span data-i18n="brand">Gudang Taktik</span>
     </a>
     <div class="navbar-links">
-      <a class="active" onclick="showPage('tactics')">Tactics</a>
-      <a onclick="showPage('spin')">Spin Wheel</a>
+      <a class="active" onclick="showPage('tactics')"><span data-i18n="navTactics">Taktik</span></a>
+      <a onclick="showPage('spin')"><span data-i18n="navSpin">Roda Acak</span></a>
+      <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">EN</button>
     </div>
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
       <i data-lucide="menu" style="width:24px;height:24px"></i>
     </button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a class="active" onclick="showPage('tactics'); toggleMobileMenu()">Tactics</a>
-    <a onclick="showPage('spin'); toggleMobileMenu()">Spin Wheel</a>
+    <a class="active" onclick="showPage('tactics'); toggleMobileMenu()"><span data-i18n="navTactics">Taktik</span></a>
+    <a onclick="showPage('spin'); toggleMobileMenu()"><span data-i18n="navSpin">Roda Acak</span></a>
+    <button class="lang-toggle" id="mobileLangToggle" onclick="toggleLanguage()">EN</button>
   </div>
 </nav>
 
 <div class="page active" id="page-tactics">
   <section class="hero">
-    <div class="hero-badge"><i data-lucide="zap" style="width:12px;height:12px"></i> PES 2017 Edition</div>
-    <h1>Master Every Tactic</h1>
-    <p>Advanced settings from the world's greatest managers, precisely configured for Pro Evolution Soccer 2017.</p>
+    <div class="hero-badge"><i data-lucide="zap" style="width:12px;height:12px"></i> <span data-i18n="heroBadge">Edisi PES 2017</span></div>
+    <h1 data-i18n="heroTitle">Kuasai Setiap Taktik</h1>
+    <p data-i18n="heroCopy">Pengaturan lanjutan dari manajer terbaik dunia, disusun khusus untuk Pro Evolution Soccer 2017.</p>
     <div class="hero-search">
       <i data-lucide="search" style="width:18px;height:18px"></i>
-      <input type="text" id="searchInput" placeholder="Search manager, tactic, or formation..." oninput="searchTactics(this.value)">
+      <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Cari manajer, taktik, atau formasi..." oninput="searchTactics(this.value)">
     </div>
   </section>
 
   <section class="filter-section">
     <div class="filter-row">
-      <button class="filter-btn active" onclick="setFilter(this, 'all')"><i data-lucide="layout-grid" style="width:14px;height:14px"></i> All</button>
-      <button class="filter-btn" onclick="setFilter(this, 'possession')"><i data-lucide="circle-dot" style="width:14px;height:14px"></i> Possession</button>
-      <button class="filter-btn" onclick="setFilter(this, 'counter')"><i data-lucide="zap" style="width:14px;height:14px"></i> Counter Attack</button>
-      <button class="filter-btn" onclick="setFilter(this, 'pressing')"><i data-lucide="flame" style="width:14px;height:14px"></i> High Press</button>
-      <button class="filter-btn" onclick="setFilter(this, 'defensive')"><i data-lucide="shield" style="width:14px;height:14px"></i> Defensive</button>
-      <button class="filter-btn" onclick="setFilter(this, 'wide')"><i data-lucide="move-horizontal" style="width:14px;height:14px"></i> Wide Play</button>
+      <button class="filter-btn active" onclick="setFilter(this, 'all')"><i data-lucide="layout-grid" style="width:14px;height:14px"></i> <span data-i18n="filterAll">Semua</span></button>
+      <button class="filter-btn" onclick="setFilter(this, 'possession')"><i data-lucide="circle-dot" style="width:14px;height:14px"></i> <span data-i18n="filterPossession">Penguasaan Bola</span></button>
+      <button class="filter-btn" onclick="setFilter(this, 'counter')"><i data-lucide="zap" style="width:14px;height:14px"></i> <span data-i18n="filterCounter">Serangan Balik</span></button>
+      <button class="filter-btn" onclick="setFilter(this, 'pressing')"><i data-lucide="flame" style="width:14px;height:14px"></i> <span data-i18n="filterPressing">Pressing Tinggi</span></button>
+      <button class="filter-btn" onclick="setFilter(this, 'defensive')"><i data-lucide="shield" style="width:14px;height:14px"></i> <span data-i18n="filterDefensive">Bertahan</span></button>
+      <button class="filter-btn" onclick="setFilter(this, 'wide')"><i data-lucide="move-horizontal" style="width:14px;height:14px"></i> <span data-i18n="filterWide">Main Sayap</span></button>
     </div>
   </section>
 
   <section class="tactics-section">
     <div class="section-header">
-      <h2>Tactics Collection</h2>
+      <h2 data-i18n="collectionTitle">Koleksi Taktik</h2>
       <span class="tactics-count" id="tacticsCount"></span>
     </div>
     <div class="tactics-grid" id="tacticsGrid"></div>
     <div class="empty-state" id="emptyState">
       <i data-lucide="search-x" style="width:48px;height:48px"></i>
-      <h3>No tactics found</h3>
-      <p>Try a different search term or filter.</p>
+      <h3 data-i18n="emptyTitle">Taktik tidak ditemukan</h3>
+      <p data-i18n="emptyCopy">Coba kata kunci atau filter lain.</p>
     </div>
   </section>
 </div>
@@ -667,13 +692,14 @@
 <div class="page" id="page-spin">
   <div class="spin-page">
     <div class="spin-header">
-      <h1>Spin the Wheel</h1>
-      <p>Let fate decide your next tactic or team.</p>
+      <h1 data-i18n="spinTitle">Putar Roda</h1>
+      <p data-i18n="spinCopy">Biarkan roda memilih taktik atau tim berikutnya.</p>
     </div>
 
     <div class="spin-tabs">
-      <button class="spin-tab active" onclick="switchSpinTab('tactics')"><i data-lucide="clipboard-list" style="width:16px;height:16px"></i> Tactics</button>
-      <button class="spin-tab" onclick="switchSpinTab('teams')"><i data-lucide="flag" style="width:16px;height:16px"></i> Teams</button>
+      <button class="spin-tab active" onclick="switchSpinTab('tactics')"><i data-lucide="clipboard-list" style="width:16px;height:16px"></i> <span data-i18n="tabTactics">Taktik</span></button>
+      <button class="spin-tab" onclick="switchSpinTab('clubs')"><i data-lucide="flag" style="width:16px;height:16px"></i> <span data-i18n="tabClubs">Klub</span></button>
+      <button class="spin-tab" onclick="switchSpinTab('national')"><i data-lucide="globe" style="width:16px;height:16px"></i> <span data-i18n="tabNational">Tim Nasional</span></button>
     </div>
 
     <div class="spin-container">
@@ -685,22 +711,25 @@
 
       <div class="spin-controls">
         <div class="spin-input-group">
-          <label>Number of Spins</label>
+          <label data-i18n="spinCount">Jumlah Putaran</label>
           <input type="number" id="spinCount" value="1" min="1" max="20">
         </div>
         <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
-          <i data-lucide="rotate-cw" style="width:18px;height:18px"></i> Spin Now
+          <i data-lucide="rotate-cw" style="width:18px;height:18px"></i> <span data-i18n="spinNow">Putar Sekarang</span>
         </button>
       </div>
 
       <div class="spin-result" id="spinResult">
-        <div class="spin-result-label" id="spinResultLabel">Result</div>
+        <div class="spin-result-label" id="spinResultLabel" data-i18n="result">Hasil</div>
         <div class="spin-result-value" id="spinResultValue"></div>
         <div class="spin-result-sub" id="spinResultSub"></div>
+        <button class="spin-result-action" id="spinResultAction" style="display:none">
+          <i data-lucide="eye" style="width:14px;height:14px"></i> <span data-i18n="viewTactic">Lihat Detail Taktik</span>
+        </button>
       </div>
 
       <div class="spin-history" id="spinHistory" style="display:none">
-        <div class="spin-history-title">Spin History</div>
+        <div class="spin-history-title" data-i18n="spinHistory">Riwayat Putaran</div>
         <div class="spin-history-list" id="spinHistoryList"></div>
       </div>
     </div>
@@ -724,7 +753,7 @@
   </div>
 </div>
 
-<footer class="footer"><p>PES 2017 Tactics Vault &mdash; Built for the beautiful game.</p></footer>
+<footer class="footer"><p><span data-i18n="footer">PES 2017 Gudang Taktik &mdash; Dibuat untuk permainan indah.</span></p></footer>
 
 <script>
 const instructionDescs = {
@@ -734,24 +763,37 @@ const instructionDescs = {
   "Hug the Touchline": "Pemain sayap bermain lebih melebar ke sisi lapangan. Sangat efektif jika Anda sering melakukan umpan silang (crossing).",
   "Attack Full-backs": "Bek kanan/kiri akan maju jauh ke depan saat menyerang untuk menambah opsi umpan di area pertahanan lawan.",
   "Centering Targets": "Gelandang serang atau penyerang akan bergerak masuk ke kotak penalti untuk menyambut umpan silang.",
-  "Counter Targets": "Satu atau dua penyerang akan tetap berada di depan (tidak ikut mundur saat bertahan) untuk bersiap melakukan serangan balik cepat.",
-  "Gegenpress": "Pemain akan langsung menekan pemain lawan secara agresif begitu kehilangan bola. Efektif merebut bola cepat, tetapi sangat menguras stamina.",
-  "Defensive Line": "Mengatur posisi garis pertahanan tim. Apakah bermain sangat rapat di kotak penalti (Deep Line) atau melakukan perangkap offside dengan garis pertahanan tinggi (Frontline Pressure).",
-  "Center-Backs Push Up": "Bek tengah akan ikut maju ke depan saat tim Anda dalam keadaan tertinggal di menit-menit akhir pertandingan.",
-  "Deep Defensive Line": "Pemain bertahan akan mundur lebih dalam ke dekat kotak penalti untuk mencegah umpan terobosan lawan.",
-  "Marking": "Anda dapat menugaskan pemain bertahan tertentu untuk melakukan penjagaan ketat (Tight Marking) pada pemain kunci atau striker lawan."
+  "Tight Marking": "Menugaskan pemain untuk menempel ketat ancaman utama lawan. Sangat berguna untuk mematikan winger licin, penyerang target, atau playmaker.",
+  "Deep Defensive Line": "Garis belakang turun lebih dekat ke kotak penalti. Efektif untuk meredam umpan jauh, bola terobosan, atau menjaga keunggulan di akhir laga.",
+  "Swarm The Box": "Gelandang dan bek merapat ke area penalti untuk menutup ruang tembak dan memadati jalur umpan silang lawan.",
+  "Counter Target": "Satu atau dua penyerang tetap berada di depan saat bertahan. Stamina mereka lebih terjaga dan siap menerima bola untuk serangan balik cepat.",
+  "Gegenpress": "Pemain langsung melakukan pressing agresif setelah kehilangan bola di area depan untuk merebutnya kembali secepat mungkin."
+};
+
+const instructionDescsEn = {
+  "Tiki-Taka": "Players move closer to create short passing triangles. Best for controlling possession and tempo.",
+  "False 9": "The central forward drops deeper to pull defenders out and open space for runners from midfield or wide areas.",
+  "Wing Rotation": "Wide players rotate with central attackers or the opposite winger to confuse the defensive line.",
+  "Hug the Touchline": "Wingers stay very wide near the sideline. Strong for stretching the pitch and creating crossing angles.",
+  "Attack Full-backs": "Full-backs push higher in attack to add passing options and overload the opponent's defensive third.",
+  "Centering Targets": "Attackers and advanced midfielders attack the box to meet crosses from wide areas.",
+  "Tight Marking": "Assigns your players to closely shadow specific key threats on the opponent's team.",
+  "Deep Defensive Line": "Drops your backline closer to your box. Useful against long balls, through balls, and late-game defending.",
+  "Swarm The Box": "Midfielders and defenders collapse into the penalty area to crowd out crossers and shooters.",
+  "Counter Target": "Leaves one or two attackers forward to preserve stamina and stay ready for a rapid counter.",
+  "Gegenpress": "Triggers aggressive pressing immediately after losing possession in advanced areas to win the ball back quickly."
 };
 
 const instructionIcons = {
   "Tiki-Taka": "triangle", "False 9": "arrow-down-to-line", "Wing Rotation": "refresh-ccw",
   "Hug the Touchline": "move-horizontal", "Attack Full-backs": "arrow-up-right",
-  "Centering Targets": "crosshair", "Counter Targets": "zap", "Gegenpress": "flame",
-  "Defensive Line": "ruler", "Center-Backs Push Up": "arrow-up-from-line",
-  "Deep Defensive Line": "shield", "Marking": "user-check"
+  "Centering Targets": "crosshair", "Tight Marking": "user-check",
+  "Deep Defensive Line": "shield", "Swarm The Box": "box",
+  "Counter Target": "zap", "Gegenpress": "flame"
 };
 
-const allAtkInstr = ["Tiki-Taka", "False 9", "Wing Rotation", "Hug the Touchline", "Attack Full-backs", "Centering Targets", "Counter Targets"];
-const allDefInstr = ["Gegenpress", "Defensive Line", "Center-Backs Push Up", "Deep Defensive Line", "Marking"];
+const allAtkInstr = ["Tiki-Taka", "False 9", "Wing Rotation", "Hug the Touchline", "Attack Full-backs", "Centering Targets"];
+const allDefInstr = ["Tight Marking", "Deep Defensive Line", "Swarm The Box", "Counter Target", "Gegenpress"];
 
 const tactics = [
   { id:1, manager:"Jurgen Klopp", title:"Gegenpressing", formation:"4-3-3", formationNums:[1,4,3,3], color:"#e53935", icon:"flame", style:"pressing", tags:["press","attack","counter"], desc:"Relentless high-intensity pressing to win the ball back within seconds of losing it. Overwhelms opponents with aggressive counter-pressing and rapid transitions.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Use high stamina players in midfield","Full-backs should have high work rate","Striker must press from the front","Best with fast, physical players","Set team pressing to maximum intensity"] },
@@ -798,50 +840,216 @@ const tactics = [
   { id:42, manager:"Tite", title:"Brazil Jogo Bonito Modern", formation:"4-3-3", formationNums:[1,4,3,3], color:"#fdd835", icon:"flame", style:"possession", tags:["possess","attack","wide"], desc:"Brazil's modern interpretation of Jogo Bonito. Possession-based attacking football with Brazilian flair, quick combinations, and individual brilliance within a structured system.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wingers with flair and creativity","Full-backs overlap with Brazilian attacking spirit","Midfield trio balances defense and attack","Striker must be clinical and mobile","Individual brilliance within team structure"] },
   { id:43, manager:"Hansi Flick", title:"Barcelona High Press", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"flame", style:"pressing", tags:["press","possess","attack"], desc:"Flick's Barcelona evolution. Combines Barcelona's possession DNA with German pressing intensity. High line, quick transitions, and relentless energy.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Young players with high energy and stamina","Pressing is the foundation of the system","Possession with vertical intent","False 9 drops deep to create overloads","High defensive line requires fast centre-backs"] },
   { id:44, manager:"Unai Emery", title:"Arsenal Europa League", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#e53935", icon:"trophy", style:"counter", tags:["counter","defend","wide"], desc:"Emery's Europa League expertise at Arsenal. Organized defensive structure with quick wide attacks and set-piece mastery. Built for European knockout football.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Disciplined defensive shape","Wingers provide pace on the counter","Set pieces are meticulously planned","Full-backs provide width in attack","Experience in knockout football is key"] },
-  { id:45, manager:"Gareth Southgate", title:"England Modern Era", formation:"3-4-3", formationNums:[1,3,4,3], color:"#e53935", icon:"trophy", style:"counter", tags:["counter","wide","defend"], desc:"England's modern approach under Southgate. Three CBs with attacking wing-backs, organized midfield, and quick transitions. Built for tournament football.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Defensive Line":"Frontline Pressure","Deep Defensive Line":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Three CBs provide defensive security","Wing-backs are the primary attacking outlet","Set pieces are a major weapon","Organized and disciplined approach","Tournament mentality and resilience"] }
+  { id:45, manager:"Gareth Southgate", title:"England Modern Era", formation:"3-4-3", formationNums:[1,3,4,3], color:"#e53935", icon:"trophy", style:"counter", tags:["counter","wide","defend"], desc:"England's modern approach under Southgate. Three CBs with attacking wing-backs, organized midfield, and quick transitions. Built for tournament football.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Defensive Line":"Frontline Pressure","Deep Defensive Line":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Three CBs provide defensive security","Wing-backs are the primary attacking outlet","Set pieces are a major weapon","Organized and disciplined approach","Tournament mentality and resilience"] },
+  { id:46, manager:"Alex Ferguson", title:"Fergie Time 4-4-2", formation:"4-4-2", formationNums:[1,4,4,2], color:"#c62828", icon:"crown", style:"counter", tags:["counter","attack","wide"], desc:"Sir Alex Ferguson's legendary 4-4-2 that dominated English football for two decades. Relentless attacking mentality with pace on the wings and a never-say-die attitude.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Fast wingers are absolutely essential","Striker partnership with complementary styles","Midfield engine with box-to-box runners","Never give up mentality - Fergie Time is real","Full-backs bomb forward at every opportunity"] },
+  { id:47, manager:"Alex Ferguson", title:"Treble Winners 1999", formation:"4-4-2", formationNums:[1,4,4,2], color:"#c62828", icon:"trophy", style:"pressing", tags:["press","attack","counter"], desc:"The 1999 Champions League winning system. Overwhelming attacking intensity, relentless pressing, and the belief that no deficit is insurmountable.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:7,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Beckham's crosses from the right are lethal","Giggs' dribbling provides unpredictability","Cole and Yorke partnership is telepathic","Keane and Scholes control the midfield engine","Never-say-die mentality defines this team"] },
+  { id:48, manager:"Arrigo Sacchi", title:"AC Milan Dream Team", formation:"4-4-2", formationNums:[1,4,4,2], color:"#c62828", icon:"crown", style:"pressing", tags:["press","attack","defend"], desc:"Sacchi's revolutionary AC Milan that changed football forever. Zonal marking, offside trap, and coordinated pressing as a single unit across the pitch.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:4,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Entire team moves as one compact unit","Offside trap is the primary defensive weapon","25-meter gap between defense and attack at all times","Every player presses relentlessly without exception","Zonal marking revolutionized Italian football"] },
+  { id:49, manager:"Johan Cruyff", title:"Dream Team Total Football", formation:"4-3-3", formationNums:[1,4,3,3], color:"#a50044", icon:"crown", style:"possession", tags:["possess","attack","press"], desc:"Cruyff's Barcelona Dream Team philosophy. Total football where every player can play in any position. Possession with purpose and attacking beauty.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:9,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Every player must be technically excellent","Positional interchange is fundamental","Press immediately upon losing the ball","Width comes from full-backs and wingers","Football is meant to be beautiful and attacking"] },
+  { id:50, manager:"Marcelo Bielsa", title:"El Loco's 3-3-1-3", formation:"3-4-3", formationNums:[1,3,4,3], color:"#1565c0", icon:"flame", style:"pressing", tags:["press","attack","wide"], desc:"Bielsa's insane high-pressing system. Man-marking across the entire pitch, relentless running, and total commitment to attacking football regardless of consequences.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:9,compactness:5,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Hug the Touchline":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Every player man-marks an opponent","Fitness levels must be extraordinary","Wing-backs cover the entire flank","Accept defensive vulnerability for attacking dominance","Bielsa demands 100% effort every single second"] },
+  { id:51, manager:"Marcelo Bielsa", title:"Leeds United Marching", formation:"4-1-4-1", formationNums:[1,4,1,4,1], color:"#1565c0", icon:"flame", style:"pressing", tags:["press","attack","wide"], desc:"Bielsa's Leeds United revolution. High-energy 4-1-4-1 with man-marking, aggressive pressing, and quick attacking transitions that brought Championship football back to the Premier League.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:8,compactness:5,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Single pivot CDM covers the entire midfield","Wide midfielders must have exceptional stamina","Full-backs overlap constantly","Man-marking across every zone","High risk, high reward - pure entertainment"] },
+  { id:52, manager:"Fabio Capello", title:"Capello's Catenaccio 2.0", formation:"4-4-2", formationNums:[1,4,4,2], color:"#212121", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Capello's modernized Italian defensive system. Rock-solid at the back with organized counter attacks and clinical finishing. Results above entertainment.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:3,compactness:9,sweeper:"On"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line","Marking":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Defense wins championships","Two banks of four, perfectly organized","Clinical striker who converts every chance","Discipline and positioning above all else","Result is the only thing that matters"] },
+  { id:53, manager:"Vicente del Bosque", title:"Spain Tiki-Taka World Cup", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"trophy", style:"possession", tags:["possess","attack","press"], desc:"Spain's World Cup 2010 winning system. The ultimate tiki-taka with Xavi-Iniesta-Busquets midfield controlling every aspect of the game through possession.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:4,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Midfield triangle is the heart of everything","Xavi role: deep-lying playmaker who dictates tempo","Iniesta role: creative runner between the lines","Busquets role: defensive anchor and ball recycler","Possess the ball until the opponent breaks down"] },
+  { id:54, manager:"Louis van Gaal", title:"Total Football 2.0", formation:"3-5-2", formationNums:[1,3,5,2], color:"#e65100", icon:"hexagon", style:"possession", tags:["possess","wide","attack"], desc:"Van Gaal's structured positional play. Three CBs build from the back, wing-backs provide width, and two strikers combine. Every player has a specific role and zone.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:4,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Strict positional discipline is non-negotiable","Wing-backs must be extremely fit","Three CBs build up patiently","Striker partnership: target man and mobile forward","Philosophy over individual brilliance"] },
+  { id:55, manager:"Louis van Gaal", title:"Netherlands 2014 Counter", formation:"5-3-2", formationNums:[1,5,3,2], color:"#e65100", icon:"trophy", style:"counter", tags:["counter","defend","attack"], desc:"Van Gaal's pragmatic Netherlands 2014. Shocked the world by abandoning possession for a devastating counter-attacking system that reached the semi-finals.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"On"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:4,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Five defenders absorb all pressure","Robben-type winger cuts inside at speed","Wing-backs explode forward on counters","Striker must hold the ball up","Pragmatism can beat any style"] },
+  { id:56, manager:"Maurizio Sarri", title:"Sarriball", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"circle-dot", style:"possession", tags:["possess","attack","press"], desc:"Sarri's Napoli masterpiece. Mesmerizing one-touch passing, coordinated movement, and the most aesthetically pleasing football in Europe during its peak.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:3,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["One-touch passing is fundamental","Midfield trio must have elite passing","Wingers cut inside for goal threat","Full-backs provide the only width","Patterns of play drilled daily in training"] },
+  { id:57, manager:"Maurizio Sarri", title:"Juventus Controlled Game", formation:"4-3-1-2", formationNums:[1,4,3,1,2], color:"#212121", icon:"circle-dot", style:"possession", tags:["possess","attack"], desc:"Sarri's attempt to bring Sarriball to Juventus. Controlled possession through the midfield with a number 10 linking play to two strikers.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Number 10 is the creative hub","Two strikers combine and interchange","Regista dictates tempo from deep","Full-backs provide width in attack","Patience in build-up is essential"] },
+  { id:58, manager:"Erik ten Hag", title:"Ajax CL Run 2019", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"trophy", style:"pressing", tags:["press","possess","attack"], desc:"Ten Hag's Ajax that stunned Real Madrid and Juventus. High pressing, quick combinations, and fearless attacking football from a young, dynamic squad.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Young players with fearless mentality","De Jong role: ball-playing midfielder from deep","De Ligt role: commanding CB who carries the ball","Wingers interchange with striker constantly","Press high and recover the ball quickly"] },
+  { id:59, manager:"Mauricio Pochettino", title:"Spurs CL Final 2019", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#1a237e", icon:"trophy", style:"pressing", tags:["press","counter","attack"], desc:"Pochettino's Tottenham that reached the Champions League final. High-energy pressing, quick transitions, and Kane dropping deep to create for runners.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"False 9":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Kane drops deep to create overloads","Son's pace on the counter is devastating","Midfield duo presses and covers ground","Full-backs push high to provide width","Every player must have elite work rate"] },
+  { id:60, manager:"Ralph Rangnick", title:"Red Bull Pressing Machine", formation:"4-2-2-2", formationNums:[1,4,2,2,2], color:"#c62828", icon:"flame", style:"pressing", tags:["press","counter","attack"], desc:"The Godfather of Gegenpressing. Rangnick's Red Bull system that influenced Klopp and Tuchel. Extreme high pressing with calculated counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:9,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Win the ball back within 8 seconds of losing it","Two strikers press the opponent's build-up","Compact midfield block forces turnovers","Quick vertical passes after winning possession","Extreme fitness requirements for all players"] },
+  { id:61, manager:"Claudio Ranieri", title:"Leicester Miracle 2016", formation:"4-4-2", formationNums:[1,4,4,2], color:"#1565c0", icon:"trophy", style:"counter", tags:["counter","defend","press"], desc:"The greatest underdog story in football history. Ranieri's Leicester City that won the Premier League against 5000-1 odds with devastating counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:4,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Hug the Touchline":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Vardy's pace behind the defense is the key weapon","Mahrez's dribbling creates chances on the counter","Kante covers every blade of grass in midfield","Compact two banks of four defend as a unit","Long balls to Vardy when the team wins possession"] },
+  { id:62, manager:"Nuno Espirito Santo", title:"Wolves Counter System", formation:"3-4-3", formationNums:[1,3,4,3], color:"#e65100", icon:"zap", style:"counter", tags:["counter","wide","defend"], desc:"Nuno's Wolves that punched above their weight. Compact 3-4-3 that sits deep and explodes on devastating counter attacks through the wing-backs.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"On"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:4,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Wing-backs are the primary attacking weapons","Three CBs absorb pressure patiently","Quick transitions through wing-backs","Portuguese flair in attack, Italian discipline in defense","Compact shape makes the team hard to break down"] },
+  { id:63, manager:"Graham Potter", title:"Potter's Flexible 3-4-2-1", formation:"3-4-2-1", formationNums:[1,3,4,2,1], color:"#1565c0", icon:"hexagon", style:"possession", tags:["possess","press","wide"], desc:"Potter's Brighton revolution. Fluid formation that shifts between 3-4-2-1 and 4-2-3-1 mid-game with intelligent positional rotations and brave build-up.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Formation shifts mid-game based on opponent","Ball-playing CBs essential for the build-up","Two number 10s rotate and interchange","Wing-backs provide width and defensive cover","Brave passing out from the back under pressure"] },
+  { id:64, manager:"Sean Dyche", title:"Burnley Fortress", formation:"4-4-2", formationNums:[1,4,4,2], color:"#6a1b9a", icon:"shield", style:"defensive", tags:["defend","counter","wide"], desc:"Dyche's Burnley that defied budgets with defensive organization. Compact 4-4-2 with set-piece threat, long balls, and an unbreakable defensive spirit.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:7,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:3,compactness:10,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Centering Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line","Marking":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Maximum compactness at all times","Set pieces and crosses are primary weapons","Target man striker holds the ball up","Every player defends with total commitment","Long throws are a legitimate tactic"] },
+  { id:65, manager:"Eddie Howe", title:"Newcastle Resurgence", formation:"4-3-3", formationNums:[1,4,3,3], color:"#212121", icon:"zap", style:"counter", tags:["counter","press","attack"], desc:"Howe's Newcastle revolution backed by new investment. High-energy pressing with quick transitions, direct wide attacks, and a physical edge.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Direct and physical style of play","Wingers with pace stretch the defense","Full-backs overlap to create width","Strong midfield runners cover ground","Set pieces are a major goal source"] },
+  { id:66, manager:"Brendan Rodgers", title:"Liverpool 2014 SAS", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"flame", style:"pressing", tags:["press","attack","possess"], desc:"Rodgers' Liverpool that almost won the league with Suarez and Sturridge. All-out attacking football with high pressing and devastating front three.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Suarez role: unpredictable genius with workrate","Sturridge role: clinical finisher with pace","Gerrard role: deep-lying playmaker with vision","Attack is the best form of defense","Score more goals than you concede"] },
+  { id:67, manager:"Marco Silva", title:"Fulham Attacking Flow", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#212121", icon:"zap", style:"possession", tags:["possess","attack","wide"], desc:"Silva's Fulham that plays above their station. Attractive possession football with width, creative number 10, and clinical counter attacks.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Creative number 10 links play beautifully","Full-backs provide width and crossing","Double pivot balances defense and attack","Wingers cut inside for goal threat","Attractive football that excites fans"] },
+  { id:68, manager:"Oliver Glasner", title:"Frankfurt Europa League", formation:"3-4-2-1", formationNums:[1,3,4,2,1], color:"#c62828", icon:"trophy", style:"counter", tags:["counter","press","wide"], desc:"Glasner's Frankfurt that won the Europa League. Devastating counter attacks through wing-backs, aggressive pressing in packs, and clinical finishing.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Wing-backs bomb forward at every opportunity","Two number 10s create overloads","Press in packs to win the ball","Quick vertical passes after winning possession","European pedigree and big-game mentality"] },
+  { id:69, manager:"Luciano Spalletti", title:"Napoli Scudetto 2023", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"Spalletti's Napoli that won Serie A in dominant fashion. Fluid 4-3-3 with Osimhen's pace, Kvaratskhelia's flair, and midfield control through Lobotka.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Osimhen's pace stretches any defense","Kvaratskhelia's dribbling is unplayable","Lobotka dictates tempo from deep midfield","Full-backs provide width and creativity","Team spirit and collective brilliance"] },
+  { id:70, manager:"Stefano Pioli", title:"AC Milan Scudetto 2022", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"trophy", style:"pressing", tags:["press","counter","attack"], desc:"Pioli's AC Milan that ended 11 years without a Scudetto. High pressing, young dynamic squad, and devastating counter attacks through Leao's pace.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Leao's pace on the left is devastating","Young squad with incredible energy","High pressing wins the ball in dangerous areas","Theo Hernandez bombs forward from left-back","Team unity and belief above individual talent"] },
+  { id:71, manager:"Jorge Jesus", title:"Flamengo Libertadores 2019", formation:"4-4-2", formationNums:[1,4,4,2], color:"#c62828", icon:"trophy", style:"pressing", tags:["press","attack","wide"], desc:"Jorge Jesus' Flamengo that conquered South America. European-style pressing imported to Brazil with devastating front two and organized defending.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["European pressing imported to South America","Gabigol and Bruno Henrique partnership","Full-backs push forward aggressively","Organized defensive shape when needed","Winning mentality instilled from day one"] },
+  { id:72, manager:"Abel Ferreira", title:"Palmeiras Libertadores", formation:"4-5-1", formationNums:[1,4,5,1], color:"#1b5e20", icon:"trophy", style:"defensive", tags:["defend","counter","press"], desc:"Abel Ferreira's Palmeiras that won back-to-back Copa Libertadores. Solid defensive organization with quick transitions and clinical counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Gegenpress":true,"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Defensive solidity is the foundation","Five midfielders crowd the centre","Quick transitions through the middle","Set pieces are a major weapon","Never concede easy goals"] },
+  { id:73, manager:"Marcelo Gallardo", title:"River Plate Libertadores", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"trophy", style:"pressing", tags:["press","possess","attack"], desc:"Gallardo's River Plate dynasty. Aggressive pressing, possession-based football, and attacking dominance that won multiple Copa Libertadores titles.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Attacking full-backs are essential","Midfield trio controls tempo","Wingers provide pace and creativity","Press high to win the ball in their half","Argentine passion and fighting spirit"] },
+  { id:74, manager:"Frank Rijkaard", title:"Barcelona 2006 Glory", formation:"4-3-3", formationNums:[1,4,3,3], color:"#a50044", icon:"trophy", style:"possession", tags:["possess","attack","wide"], desc:"Rijkaard's Barcelona that won the Champions League in 2006. Ronaldinho's magic, Eto'o's finishing, and a free-flowing attacking system that dazzled the world.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:6,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Ronaldinho has complete creative freedom","Eto'o runs channels relentlessly","Deco controls tempo from midfield","Full-backs provide width","Individual brilliance within team framework"] },
+  { id:75, manager:"Ernesto Valverde", title:"Barcelona Domestic Dominance", formation:"4-4-2", formationNums:[1,4,4,2], color:"#a50044", icon:"shield-check", style:"possession", tags:["possess","defend","attack"], desc:"Valverde's pragmatic Barcelona. Maintained possession DNA while adding defensive solidity. Won La Liga titles with a balanced approach.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:4,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:6,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true},defInstructions:{"Defensive Line":"Frontline Pressure","Deep Defensive Line":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Messi given free role to roam","Suarez provides physical presence","Midfield controls possession patiently","More defensive stability than previous Barca","Pragmatism when needed, beauty when possible"] },
+  { id:76, manager:"Marco Rose", title:"Dortmund Vertical Attack", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#fdd835", icon:"flame", style:"pressing", tags:["press","counter","attack"], desc:"Rose's Borussia Dortmund. Vertical, direct attacking football with aggressive pressing and devastating transitions through the centre.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Quick vertical passes after winning the ball","Haaland-type striker stretches the defense","Wingers with pace and creativity","Aggressive pressing in the opponent's half","Full-backs support attacks consistently"] },
+  { id:77, manager:"Roberto Martinez", title:"Belgium Golden Generation", formation:"3-4-3", formationNums:[1,3,4,3], color:"#c62828", icon:"trophy", style:"possession", tags:["possess","attack","wide"], desc:"Martinez's Belgium with the golden generation. Three CBs with world-class attackers and creative midfielders. Designed to maximize the talent of Hazard, De Bruyne, and Lukaku.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Conservative",defensiveLine:5,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Hug the Touchline":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["System built around world-class individuals","De Bruyne given freedom to create","Lukaku holds up play and finishes","Wing-backs provide width and crossing","Three CBs allow attacking freedom"] },
+  { id:78, manager:"Joachim Low", title:"Germany 2014 Champions", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#212121", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"Low's Germany that won the 2014 World Cup in Brazil. Perfect blend of German efficiency and Spanish-influenced possession with devastating pressing.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["False 9 system with no traditional striker","Muller as raumdeuter - space interpreter","Kroos dictates tempo from deep","Lahm provides defensive intelligence","Efficiency in front of goal - clinical finishing"] },
+  { id:79, manager:"Vincenzo Montella", title:"Fiorentina Attacking Beauty", formation:"4-3-3", formationNums:[1,4,3,3], color:"#6a1b9a", icon:"flame", style:"possession", tags:["possess","attack","wide"], desc:"Montella's Fiorentina that played beautiful attacking football. Fluid 4-3-3 with creative midfield, attacking full-backs, and clinical forwards.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Beautiful attacking football is the priority","Creative midfield drives the team forward","Full-backs provide width and overlapping runs","Wingers with flair and goal threat","Florence tradition of attractive football"] },
+  { id:80, manager:"Pep Guardiola", title:"Bayern Treble 2013 Style", formation:"4-1-4-1", formationNums:[1,4,1,4,1], color:"#c62828", icon:"crown", style:"possession", tags:["possess","press","attack"], desc:"Guardiola's Bayern Munich adaptation. Extreme possession with a single pivot, inverted wingers, and full-backs pushing into midfield to create numerical superiority.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:9,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Single pivot must have elite defensive awareness","Full-backs invert into midfield positions","Wingers cut inside to create overloads","Highest possible defensive line","Absolute control of possession at all times"] },
+  { id:81, manager:"Thomas Tuchel", title:"Bayern Munich 2024", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"hexagon", style:"pressing", tags:["press","possess","attack"], desc:"Tuchel's Bayern Munich rebuilt. High pressing with structured possession, double pivot for stability, and explosive wide attacks through Sane and Musiala.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Double pivot provides defensive stability","Musiala role: creative freedom between lines","Sane's pace stretches the defense","Full-backs support attacks on both flanks","Structured pressing with clear triggers"] },
+  { id:82, manager:"Jose Mourinho", title:"Inter Treble 2010", formation:"4-3-1-2", formationNums:[1,4,3,1,2], color:"#01579b", icon:"trophy", style:"counter", tags:["counter","defend","press"], desc:"Mourinho's Inter Milan that won the historic treble. Tactical masterclass in the Champions League with defensive solidity and lethal counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:3,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"False 9":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line","Marking":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Sneijder as the creative number 10","Milito clinical in front of goal","Zanetti leads by example","Two banks of four in defense","Tactical flexibility for different opponents"] },
+  { id:83, manager:"Jose Mourinho", title:"Chelsea 2005 Blue Wall", formation:"4-3-3", formationNums:[1,4,3,3], color:"#0d47a1", icon:"shield", style:"defensive", tags:["defend","counter","press"], desc:"Mourinho's first Chelsea dynasty. Conceded only 15 goals in a Premier League season. Impenetrable defensive wall with enough quality to win games.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:4,compactness:10,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line","Marking":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Only 15 goals conceded in the league","Terry and Carvalho partnership is immovable","Makelele role: the screen in front of defense","Lampard arrives late in the box for goals","Drogba bullies any defense physically"] },
+  { id:84, manager:"Antonio Conte", title:"Chelsea 3-4-3 Title Winners", formation:"3-4-3", formationNums:[1,3,4,3], color:"#0d47a1", icon:"trophy", style:"counter", tags:["counter","press","wide"], desc:"Conte's Chelsea 3-4-3 that won the Premier League with 30 wins. After the Arsenal defeat, switched to 3-4-3 and went on a 13-game winning streak.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:6,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Alonso and Moses as wing-backs transformed them","Hazard given freedom to roam and create","Costa's physical presence up front","Kante covers every blade of grass","13-game winning streak after tactical switch"] },
+  { id:85, manager:"Antonio Conte", title:"Inter Scudetto 2021", formation:"3-5-2", formationNums:[1,3,5,2], color:"#01579b", icon:"trophy", style:"counter", tags:["counter","wide","press"], desc:"Conte's Inter that ended Juventus' 9-year Scudetto dominance. Organized 3-5-2 with Lukaku-Lautaro partnership and Hakimi's explosive wing-back runs.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Lukaku and Lautaro partnership is devastating","Hakimi's pace on the right is unstoppable","Barella covers every inch of midfield","Three CBs provide the defensive foundation","Discipline and organization win titles"] },
+  { id:86, manager:"Luciano Spalletti", title:"Italy Euro Pressing", formation:"3-5-2", formationNums:[1,3,5,2], color:"#1565c0", icon:"flame", style:"pressing", tags:["press","possess","wide"], desc:"Spalletti's Italy rebuilt with pressing intensity. Three CBs with attacking wing-backs, midfield control, and coordinated high pressing.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wing-backs drive the attack from wide areas","Midfield trio controls possession","High pressing in coordinated units","Italian tactical intelligence maintained","Modern attacking approach with defensive DNA"] },
+  { id:87, manager:"Mauricio Pochettino", title:"PSG Pressing Evolution", formation:"4-3-3", formationNums:[1,4,3,3], color:"#0d47a1", icon:"flame", style:"pressing", tags:["press","attack","possess"], desc:"Pochettino's PSG challenge. Trying to implement pressing with Messi, Neymar, and Mbappe. High-energy midfield doing the dirty work for the front three.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Front three have reduced defensive duties","Midfield must compensate with extra running","Verratti controls tempo from deep","Transitions from defense to attack are rapid","Star management and tactical compromise"] },
+  { id:88, manager:"Didier Deschamps", title:"France Euro 2016 Runner-Up", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#1a237e", icon:"shield-check", style:"defensive", tags:["defend","counter","wide"], desc:"France's Euro 2016 host nation run to the final. Organized and compact with Griezmann's quality making the difference in tight games.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:4,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line"},setPieces:"Zonal Marking",offsideTrap:"Off"} }, notes:["Griezmann the match-winner in tight games","Kante and Pogba balance in midfield","Organized defensive shape at all times","Counter attacks through wide areas","Tournament mentality - defense first"] },
+  { id:89, manager:"Zinedine Zidane", title:"France 1998 World Champions", formation:"4-3-2-1", formationNums:[1,4,3,2,1], color:"#1a237e", icon:"trophy", style:"possession", tags:["possess","attack","defend"], desc:"France's 1998 World Cup winning team on home soil. Zidane's magic, Desailly-Thuram defensive wall, and a midfield that controlled every game.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Zidane's creativity is the centerpiece","Desailly and Thuram form an impenetrable wall","Deschamps anchors the midfield","Henry provides pace on the counter","Home crowd provides the 12th man advantage"] },
+  { id:90, manager:"Tite", title:"Brazil Copa America Style", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#fdd835", icon:"zap", style:"counter", tags:["counter","attack","wide"], desc:"Tite's Brazil Copa America approach. More pragmatic than the classic Jogo Bonito, with organized pressing and clinical counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Neymar as the creative catalyst","Attacking full-backs bomb forward","Casemiro provides defensive shield","Clinical finishing from limited chances","Brazilian flair with tactical organization"] },
+  { id:91, manager:"Lionel Scaloni", title:"Argentina Copa America 2024", formation:"4-4-2", formationNums:[1,4,4,2], color:"#1565c0", icon:"trophy", style:"counter", tags:["counter","press","defend"], desc:"Scaloni's Argentina defends the Copa America. Evolved from the World Cup system with more defensive maturity and organized counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Messi's genius requires minimal touches","Midfield warriors protect the defense","Organized pressing from the front","Counter attacks are lethal and clinical","Copa America experience and confidence"] },
+  { id:92, manager:"Unai Emery", title:"Aston Villa European Push", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#6a1b9a", icon:"zap", style:"counter", tags:["counter","press","wide"], desc:"Emery's Aston Villa competing in Europe. Organized defensive base with quick, devastating counter attacks and set-piece mastery.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Watkins leads the press from the front","Double pivot provides defensive security","Set pieces meticulously rehearsed","Quick transitions through wide areas","European experience from Emery's pedigree"] },
+  { id:93, manager:"Mikel Arteta", title:"Arsenal Title Challenge 2024", formation:"4-3-3", formationNums:[1,4,3,3], color:"#e53935", icon:"target", style:"possession", tags:["possess","press","attack"], desc:"Arteta's evolved Arsenal challenging for the Premier League title. Positional play perfected with Saka, Rice, and Odegaard driving the team forward.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Saka is the creative heartbeat on the right","Rice provides the midfield steel","Odegaard links play as the number 10","Set pieces are a major weapon","Title-winning mentality instilled in the squad"] },
+  { id:94, manager:"Pep Guardiola", title:"Barcelona 2009 Sextuple", formation:"4-3-3", formationNums:[1,4,3,3], color:"#a50044", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"The greatest club season in football history. Guardiola's Barcelona winning all six trophies with Messi, Xavi, and Iniesta playing the most beautiful football ever seen.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:3,positionalSwitch:"Off"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:9,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Messi as false 9 changed football forever","Xavi-Iniesta-Busquets midfield trio is perfection","Press within 5 seconds of losing possession","70%+ possession in every game","The greatest team performance in football history"] },
+  { id:95, manager:"Helenio Herrera", title:"Grande Inter Catenaccio", formation:"5-3-2", formationNums:[1,5,3,2], color:"#01579b", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"The original catenaccio master. Herrera's Grande Inter that dominated 1960s European football with defensive perfection and lethal counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:7,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:2,compactness:10,sweeper:"On"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line","Marking":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Sweeper behind the back four is essential","Man-marking every opponent to death","Score one goal then defend it to the death","Counter attacks are clinical and rare","The original defensive masterclass"] },
+  { id:96, manager:"Rinus Michels", title:"Netherlands 1974 Total Football", formation:"4-3-3", formationNums:[1,4,3,3], color:"#e65100", icon:"crown", style:"pressing", tags:["press","possess","attack"], desc:"The birth of Total Football. Michels' Netherlands at the 1974 World Cup where every player could play in any position. Revolutionary and beautiful.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:9,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true,"False 9":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Every player can play in every position","Cruyff is the conductor of the orchestra","Pressing as a collective art form","Total interchange of positions","Football as it was meant to be played"] },
+  { id:97, manager:"Carlos Bianchi", title:"Boca Juniors Libertadores", formation:"4-4-2", formationNums:[1,4,4,2], color:"#fdd835", icon:"trophy", style:"defensive", tags:["defend","counter","press"], desc:"Bianchi's Boca Juniors dynasty. Masters of the Copa Libertadores with defensive grit, La Bombonera atmosphere, and clinical counter attacks.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:4,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true},defInstructions:{"Deep Defensive Line":true,"Defensive Line":"Deep Line","Marking":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["La Bombonera is the 12th man","Physical and aggressive throughout","Two strikers counter attack at speed","Midfield warriors cover every blade of grass","South American passion and grit"] },
+  { id:98, manager:"Pep Guardiola", title:"Man City Centurions 2018", formation:"4-3-3", formationNums:[1,4,3,3], color:"#6cabdd", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"The Centurions. 100 points in a Premier League season. Guardiola's City at their absolute peak with KDB, Silva, and unstoppable attacking football.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["De Bruyne orchestrates from the right half-space","David Silva weaves magic in tight spaces","Sterling's runs stretch every defense","Walker inverts from right-back into midfield","100 points - the greatest Premier League season"] },
+  { id:99, manager:"Alex Ferguson", title:"United 2008 Champions of Europe", formation:"4-4-2", formationNums:[1,4,4,2], color:"#c62828", icon:"trophy", style:"counter", tags:["counter","attack","press"], desc:"Ferguson's 2008 Champions League winners. Ronaldo-Rooney-Tevez trident with Scholes-Carrick midfield control. The last great Manchester United team.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Ronaldo's goalscoring is otherworldly","Rooney's work rate and finishing are elite","Tevez presses from the front relentlessly","Scholes' passing dictates the game","Vidic and Ferdinand partnership is world-class"] },
+  { id:100, manager:"Carlo Ancelotti", title:"Real Madrid 2022 Champions", formation:"4-3-3", formationNums:[1,4,3,3], color:"#283593", icon:"trophy", style:"counter", tags:["counter","possess","attack"], desc:"Ancelotti's Real Madrid Champions League miracle run. Come-from-behind wins against PSG, Chelsea, and City before beating Liverpool in the final.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Hug the Touchline":true},defInstructions:{"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Benzema's clutch performances define the run","Vinicius Jr destroys any right-back","Modric controls the game's tempo","Courtois makes impossible saves","Champions League DNA - never beaten until the final whistle"] },
+  { id:101, manager:"Jogi Low", title:"Germany Raumdeuter System", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#212121", icon:"hexagon", style:"pressing", tags:["press","possess","attack"], desc:"Low's Germany with the Raumdeuter concept. Muller as the space interpreter, combining German pressing with Spanish possession influence.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Muller the Raumdeuter - space interpreter","Ozil creates from the number 10 position","German efficiency meets Spanish possession","Neuer sweeper-keeper plays as outfield player","Tactical intelligence across every position"] },
+  { id:102, manager:"Jurgen Klopp", title:"Borussia Dortmund 2013 CL", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#fdd835", icon:"trophy", style:"pressing", tags:["press","counter","attack"], desc:"Klopp's Dortmund that reached the Champions League final in 2013. Explosive counter-pressing, pace on the wings, and Lewandowski finishing everything.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:8,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Lewandowski scores 4 against Real Madrid","Reus and Gotze provide creativity and pace","Hummels organizes from centre-back","Counter-pressing is the heart of the system","Yellow Wall atmosphere drives the team"] },
+  { id:103, manager:"Zinedine Zidane", title:"BBC System 2017", formation:"4-3-3", formationNums:[1,4,3,3], color:"#283593", icon:"crown", style:"counter", tags:["counter","attack","possess"], desc:"The BBC era - Bale, Benzema, Cristiano. Zidane's Real Madrid with the most devastating front three in football, backed by Modric-Kroos-Casemiro midfield.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Counter Targets":true,"Hug the Touchline":true},defInstructions:{"Defensive Line":"Frontline Pressure","Marking":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Ronaldo is the ultimate goal machine","Bale provides pace and aerial threat","Benzema links play selflessly","Modric-Kroos-Casemiro is the perfect midfield","Back-to-back Champions League domination"] },
+  { id:104, manager:"Diego Maradona", title:"Argentina Creative Chaos", formation:"4-3-1-2", formationNums:[1,4,3,1,2], color:"#1565c0", icon:"crown", style:"counter", tags:["counter","attack","possess"], desc:"Maradona's Argentina management style. Creative freedom for the playmaker, passionate attacking football, and Argentine grit in defense.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"False 9":true,"Counter Targets":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Playmaker given absolute creative freedom","Two strikers with different characteristics","Passion and emotion drive the team","Argentine fighting spirit in every duel","Individual brilliance can change everything"] },
+  { id:105, manager:"Arne Slot", title:"Liverpool Premier League 2025", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"trophy", style:"possession", tags:["possess","press","attack"], desc:"Slot's Liverpool winning the Premier League in his first season. Added structural possession to Liverpool's pressing DNA with Salah, Van Dijk leadership, and new tactical identity.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Defensive Line":"Frontline Pressure"},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Salah remains the primary goal threat","Van Dijk provides defensive leadership","More controlled possession than Klopp era","Pressing remains but more selective","First season title - immediate impact"] },
+  { id:106, manager:"Jose Mourinho", title:"Inter 2010 Treble Lock", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#01579b", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Blok rendah Inter 2010 dengan dua gelandang jangkar, sayap yang disiplin, dan serangan balik cepat melalui penyerang utama.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:3,compactness:10,sweeper:"On"}, advanced:{atkInstructions:{"Hug the Touchline":true},defInstructions:{"Tight Marking":true,"Deep Defensive Line":true,"Swarm The Box":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Jaga bentuk dua gelandang bertahan","Biarkan striker menjadi titik pantul","Sayap wajib turun membantu bek","Kunci area tengah lebih dulu","Serang cepat setelah merebut bola"] },
+  { id:107, manager:"Pep Guardiola", title:"Bayern Positional Machine", formation:"4-1-4-1", formationNums:[1,4,1,4,1], color:"#c62828", icon:"circle-dot", style:"possession", tags:["possess","press","attack"], desc:"Penguasaan bola Bayern dengan jarak antarlini rapat, full-back agresif, dan pressing cepat setelah kehilangan bola.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true,"Tight Marking":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Pivot tunggal harus aman mengalirkan bola","Full-back ikut menciptakan overload","Tekan balik begitu bola hilang","Jaga jarak operan tetap pendek","Butuh bek cepat untuk garis tinggi"] },
+  { id:108, manager:"Antonio Conte", title:"Italy 3-5-2 Tournament Block", formation:"3-5-2", formationNums:[1,3,5,2], color:"#1565c0", icon:"layers", style:"defensive", tags:["defend","counter","wide"], desc:"Tiga bek solid dengan wing-back rajin naik turun, dua striker siap menyerang ruang, dan blok bertahan yang sangat disiplin.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:4,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Centering Targets":true},defInstructions:{"Deep Defensive Line":true,"Swarm The Box":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Wing-back menjadi sumber lebar utama","Tiga bek jangan terpancing keluar bersamaan","Dua striker harus saling melengkapi","Padatkan area tengah saat unggul","Serangan balik diarahkan ke sisi lapangan"] },
+  { id:109, manager:"Diego Simeone", title:"Atletico Low Block Bite", formation:"4-4-2", formationNums:[1,4,4,2], color:"#b71c1c", icon:"shield", style:"defensive", tags:["defend","counter","press"], desc:"Dua garis empat yang kompak, duel fisik kuat, dan transisi vertikal cepat setelah lawan kehilangan keseimbangan.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:4,compactness:10,sweeper:"Off"}, advanced:{atkInstructions:{},defInstructions:{"Tight Marking":true,"Deep Defensive Line":true,"Swarm The Box":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Kompak adalah senjata utama","Striker ikut menutup jalur umpan","Tekel dan duel udara harus kuat","Jangan beri ruang di half-space","Manfaatkan bola mati"] },
+  { id:110, manager:"Jurgen Klopp", title:"Liverpool 2019 Red Storm", formation:"4-3-3", formationNums:[1,4,3,3], color:"#c62828", icon:"flame", style:"pressing", tags:["press","counter","wide"], desc:"Pressing tinggi Liverpool dengan full-back ofensif, tiga penyerang agresif, dan transisi secepat mungkin menuju kotak penalti.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Centering Targets":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Counter Target":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Full-back harus punya umpan silang tajam","Tiga penyerang memulai pressing","Gelandang menjaga second ball","Jangan beri lawan waktu membalik badan","Rotasi stamina sangat penting"] },
+  { id:111, manager:"Zinedine Zidane", title:"Madrid Diamond Control", formation:"4-3-1-2", formationNums:[1,4,3,1,2], color:"#283593", icon:"crown", style:"possession", tags:["possess","counter","attack"], desc:"Berlian lini tengah untuk mengontrol tempo, dua striker mencari celah, dan full-back memberi lebar saat menyerang.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Attack Full-backs":true},defInstructions:{"Tight Marking":true,"Counter Target":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Playmaker berada di puncak berlian","Full-back wajib memberi lebar","Dua striker menyerang kanal berbeda","Jaga keseimbangan saat kehilangan bola","Cocok untuk gelandang teknis"] },
+  { id:112, manager:"Thomas Tuchel", title:"Chelsea 2021 UCL Shape", formation:"3-4-2-1", formationNums:[1,3,4,2,1], color:"#0d47a1", icon:"shield-check", style:"defensive", tags:["defend","press","counter"], desc:"Struktur tiga bek yang rapi, dua gelandang serang menutup jalur umpan, dan serangan balik terarah dari half-space.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Wing Rotation":true},defInstructions:{"Tight Marking":true,"Swarm The Box":true,"Gegenpress":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Dua AMF menutup pivot lawan","Wing-back jangan naik bersamaan terus","Tiga bek siap duel satu lawan satu","Tekan saat bola diarahkan ke sisi","Serangan balik lewat ruang antar bek"] },
+  { id:113, manager:"Roberto Mancini", title:"Italy Euro 2020 Flow", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"trophy", style:"possession", tags:["possess","press","wide"], desc:"Italia modern dengan penguasaan bola, full-back aktif, rotasi lini tengah, dan pressing kolektif yang rapi.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true,"Attack Full-backs":true},defInstructions:{"Gegenpress":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Gelandang harus nyaman menerima bola","Winger bisa masuk ke dalam","Full-back memberi variasi serangan","Pressing dilakukan sebagai unit","Kuasai tempo sebelum mempercepat serangan"] },
+  { id:114, manager:"Didier Deschamps", title:"France 2018 Power Counter", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#1a237e", icon:"zap", style:"counter", tags:["counter","defend","attack"], desc:"Blok tengah yang kuat dengan dua gelandang pelindung, winger cepat, dan serangan balik langsung ke ruang kosong.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"On"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:4,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Hug the Touchline":true},defInstructions:{"Deep Defensive Line":true,"Swarm The Box":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Dua gelandang bertahan melindungi bek","Winger cepat jadi outlet utama","Serang setelah lawan kehilangan bentuk","Jaga blok tetap sabar","Bola mati bisa menjadi pembeda"] },
+  { id:115, manager:"Lionel Scaloni", title:"Argentina 2022 Balanced Press", formation:"4-3-3", formationNums:[1,4,3,3], color:"#1565c0", icon:"trophy", style:"counter", tags:["counter","press","possess"], desc:"Keseimbangan Argentina dengan pressing terukur, gelandang pekerja keras, dan kebebasan kreatif untuk pemain kunci di depan.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:6,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"False 9":true},defInstructions:{"Tight Marking":true,"Counter Target":true,"Gegenpress":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Gelandang harus menutup ruang dengan disiplin","False 9 membuka jalur lari winger","Pressing dipilih pada momen tepat","Jangan kehilangan bola di area tengah","Serangan balik bisa lewat kombinasi pendek"] },
+  { id:116, manager:"Louis van Gaal", title:"Ajax 1995 Academy Press", formation:"3-4-3", formationNums:[1,3,4,3], color:"#c62828", icon:"hexagon", style:"pressing", tags:["press","possess","attack"], desc:"Total football akademi Ajax dengan tiga bek, rotasi posisi, pressing agresif, dan keberanian membangun serangan dari belakang.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:8,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"Wing Rotation":true,"False 9":true},defInstructions:{"Gegenpress":true,"Tight Marking":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Semua pemain harus berani menerima bola","Rotasi posisi wajib terkoordinasi","Tekan lawan sejak build-up awal","Jaga garis belakang tetap kompak","Cocok untuk skuad muda dan teknis"] },
+  { id:117, manager:"Jupp Heynckes", title:"Bayern 2013 Treble Engine", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#c62828", icon:"trophy", style:"pressing", tags:["press","counter","attack"], desc:"Mesin Bayern 2013 dengan pressing kuat, sayap eksplosif, dan transisi cepat yang tetap seimbang secara defensif.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Hug the Touchline":true},defInstructions:{"Gegenpress":true,"Counter Target":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Sayap cepat menjadi senjata utama","Double pivot menjaga keseimbangan","Tekan lawan dengan intensitas tinggi","Full-back naik saat winger masuk","Finishing harus cepat dan klinis"] },
+  { id:118, manager:"Carlo Ancelotti", title:"Milan 2007 Christmas Tree", formation:"4-3-2-1", formationNums:[1,4,3,2,1], color:"#c62828", icon:"crown", style:"possession", tags:["possess","defend","attack"], desc:"Pohon Natal Milan dengan tiga gelandang kuat, dua playmaker di belakang striker, dan kontrol tempo yang sabar.", settings:{ attack:{attackingStyle:"Possession Game",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:5,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:8,sweeper:"Off"}, advanced:{atkInstructions:{"Tiki-Taka":true,"False 9":true},defInstructions:{"Tight Marking":true,"Swarm The Box":true},setPieces:"Zonal Marking",offsideTrap:"Off"} }, notes:["Tiga gelandang menjaga kontrol tengah","Dua AMF mencari ruang antarlini","Striker harus kuat menahan bola","Jangan terburu-buru menyerang","Sangat cocok untuk pemain teknis senior"] },
+  { id:119, manager:"Marcello Lippi", title:"Italy 2006 Compact Wall", formation:"4-3-1-2", formationNums:[1,4,3,1,2], color:"#1565c0", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Pertahanan Italia 2006 dengan blok rapat, playmaker klasik, dua striker, dan disiplin tinggi di setiap zona.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:3,compactness:10,sweeper:"On"}, advanced:{atkInstructions:{},defInstructions:{"Tight Marking":true,"Deep Defensive Line":true,"Swarm The Box":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Bek tengah harus dominan di udara","Playmaker mengatur tempo serangan balik","Dua striker siap mengejar bola panjang","Jangan beri ruang tembak dari depan kotak","Kesabaran bertahan adalah kunci"] },
+  { id:120, manager:"Otto Rehhagel", title:"Greece 2004 Underdog Wall", formation:"4-5-1", formationNums:[1,4,5,1], color:"#1565c0", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Taktik underdog dengan blok sangat rendah, lima gelandang menutup ruang, dan serangan sederhana lewat bola mati atau umpan panjang.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:7,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:2,compactness:10,sweeper:"On"}, advanced:{atkInstructions:{"Centering Targets":true},defInstructions:{"Tight Marking":true,"Deep Defensive Line":true,"Swarm The Box":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Bertahan dulu, menyerang seperlunya","Striker tunggal harus kuat duel","Crossing dan bola mati sangat penting","Jangan buka ruang di tengah","Cocok melawan tim yang lebih kuat"] },
+  { id:121, manager:"Claudio Ranieri", title:"Leicester 2016 Lightning", formation:"4-4-2", formationNums:[1,4,4,2], color:"#1565c0", icon:"zap", style:"counter", tags:["counter","defend","wide"], desc:"Dua garis empat yang sederhana, striker cepat di depan, dan serangan balik langsung ke ruang belakang bek lawan.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Wide",positioning:"Maintain",supportRange:6,positionalSwitch:"On"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:4,compactness:9,sweeper:"Off"}, advanced:{atkInstructions:{"Hug the Touchline":true},defInstructions:{"Deep Defensive Line":true,"Counter Target":true,"Swarm The Box":true},setPieces:"Zonal Marking",offsideTrap:"Off"} }, notes:["Striker cepat menjadi outlet utama","Winger menyerang ruang setelah merebut bola","Midfield harus kuat memenangi second ball","Jaga bentuk 4-4-2 tetap sederhana","Efektif untuk mengejutkan tim besar"] },
+  { id:122, manager:"Felipao Scolari", title:"Brazil 2002 Three Stars", formation:"3-4-1-2", formationNums:[1,3,4,1,2], color:"#fdd835", icon:"crown", style:"counter", tags:["counter","attack","wide"], desc:"Tiga bek memberi keamanan, wing-back agresif memberi lebar, dan trio depan diberi ruang untuk menyelesaikan serangan.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:5,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:5,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Centering Targets":true},defInstructions:{"Counter Target":true,"Tight Marking":true},setPieces:"Zonal Marking",offsideTrap:"On"} }, notes:["Wing-back sangat penting dalam fase menyerang","Playmaker bebas mencari ruang","Dua striker menyerang kotak penalti","Tiga bek menjaga stabilitas","Transisi harus langsung dan tajam"] },
+  { id:123, manager:"Guus Hiddink", title:"Korea 2002 Relentless Press", formation:"3-4-1-2", formationNums:[1,3,4,1,2], color:"#c62828", icon:"flame", style:"pressing", tags:["press","counter","wide"], desc:"Pressing tanpa henti dengan stamina tinggi, wing-back agresif, dan serangan balik cepat setelah memaksa kesalahan lawan.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Wide",positioning:"Flexible",supportRange:3,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Wide",pressuring:"Aggressive",defensiveLine:8,compactness:6,sweeper:"Off"}, advanced:{atkInstructions:{"Attack Full-backs":true,"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Tight Marking":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Stamina tinggi wajib di semua lini","Tekan lawan sampai melakukan kesalahan","Wing-back naik turun tanpa henti","Serangan balik jangan terlalu lama","Risiko garis tinggi harus diterima"] },
+  { id:124, manager:"Marcelo Gallardo", title:"River Plate Vertical 4-4-2", formation:"4-4-2", formationNums:[1,4,4,2], color:"#c62828", icon:"flame", style:"pressing", tags:["press","counter","attack"], desc:"Pressing Amerika Selatan dengan intensitas, duel, dan serangan vertikal cepat dari lini tengah menuju dua striker.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Short Pass",attackingArea:"Centre",positioning:"Flexible",supportRange:4,positionalSwitch:"On"}, defense:{defensiveStyle:"Frontline Defender",containmentArea:"Middle",pressuring:"Aggressive",defensiveLine:7,compactness:7,sweeper:"Off"}, advanced:{atkInstructions:{"Wing Rotation":true},defInstructions:{"Gegenpress":true,"Tight Marking":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"On"} }, notes:["Duel lini tengah harus dimenangkan","Dua striker menekan dari depan","Operan vertikal lebih penting dari penguasaan lama","Tekanan dilakukan dengan emosi terkontrol","Cocok untuk laga tempo tinggi"] },
+  { id:125, manager:"Jose Mourinho", title:"Roma 2022 Final Control", formation:"4-2-3-1", formationNums:[1,4,2,3,1], color:"#b71c1c", icon:"shield", style:"defensive", tags:["defend","counter"], desc:"Pendekatan final yang pragmatis: blok rapat, perlindungan double pivot, dan serangan balik melalui pemain depan yang kuat.", settings:{ attack:{attackingStyle:"Counter Attack",buildUp:"Long Pass",attackingArea:"Centre",positioning:"Maintain",supportRange:6,positionalSwitch:"Off"}, defense:{defensiveStyle:"All-out Defense",containmentArea:"Middle",pressuring:"Conservative",defensiveLine:3,compactness:9,sweeper:"On"}, advanced:{atkInstructions:{},defInstructions:{"Tight Marking":true,"Deep Defensive Line":true,"Swarm The Box":true,"Counter Target":true},setPieces:"Man Marking",offsideTrap:"Off"} }, notes:["Final dimenangkan dengan kontrol risiko","Double pivot jangan keluar posisi","Target man penting untuk menahan bola","Padatkan kotak penalti saat ditekan","Serang hanya ketika peluang benar-benar terbuka"] }
 ];
 
-const famousTeams = [
+const clubTeams = [
   {name:"Real Madrid",country:"Spain",color:"#283593"},
   {name:"Barcelona",country:"Spain",color:"#a50044"},
+  {name:"Atletico Madrid",country:"Spain",color:"#b71c1c"},
+  {name:"Sevilla",country:"Spain",color:"#c62828"},
+  {name:"Villarreal",country:"Spain",color:"#fdd835"},
+  {name:"Real Sociedad",country:"Spain",color:"#1565c0"},
+  {name:"Valencia",country:"Spain",color:"#e65100"},
+  {name:"Athletic Bilbao",country:"Spain",color:"#c62828"},
+  {name:"Real Betis",country:"Spain",color:"#1b5e20"},
   {name:"Manchester City",country:"England",color:"#6cabdd"},
   {name:"Liverpool",country:"England",color:"#c62828"},
-  {name:"Bayern Munich",country:"Germany",color:"#c62828"},
-  {name:"PSG",country:"France",color:"#0d47a1"},
-  {name:"Inter Milan",country:"Italy",color:"#01579b"},
-  {name:"AC Milan",country:"Italy",color:"#c62828"},
-  {name:"Juventus",country:"Italy",color:"#212121"},
-  {name:"Atletico Madrid",country:"Spain",color:"#b71c1c"},
   {name:"Arsenal",country:"England",color:"#e53935"},
   {name:"Chelsea",country:"England",color:"#0d47a1"},
   {name:"Manchester United",country:"England",color:"#c62828"},
-  {name:"Tottenham",country:"England",color:"#1a237e"},
-  {name:"Borussia Dortmund",country:"Germany",color:"#fdd835"},
+  {name:"Tottenham Hotspur",country:"England",color:"#1a237e"},
+  {name:"Newcastle United",country:"England",color:"#212121"},
+  {name:"Aston Villa",country:"England",color:"#6a1b9a"},
+  {name:"West Ham United",country:"England",color:"#6a1b9a"},
+  {name:"Everton",country:"England",color:"#0d47a1"},
+  {name:"Leicester City",country:"England",color:"#1565c0"},
+  {name:"Leeds United",country:"England",color:"#1565c0"},
+  {name:"Wolverhampton",country:"England",color:"#e65100"},
+  {name:"Juventus",country:"Italy",color:"#212121"},
+  {name:"Inter Milan",country:"Italy",color:"#01579b"},
+  {name:"AC Milan",country:"Italy",color:"#c62828"},
   {name:"Napoli",country:"Italy",color:"#1565c0"},
   {name:"AS Roma",country:"Italy",color:"#b71c1c"},
+  {name:"Lazio",country:"Italy",color:"#1565c0"},
+  {name:"Atalanta",country:"Italy",color:"#1a237e"},
+  {name:"Fiorentina",country:"Italy",color:"#6a1b9a"},
+  {name:"Bayern Munich",country:"Germany",color:"#c62828"},
+  {name:"Borussia Dortmund",country:"Germany",color:"#fdd835"},
+  {name:"RB Leipzig",country:"Germany",color:"#c62828"},
+  {name:"Bayer Leverkusen",country:"Germany",color:"#c62828"},
+  {name:"Eintracht Frankfurt",country:"Germany",color:"#212121"},
+  {name:"Schalke 04",country:"Germany",color:"#0d47a1"},
+  {name:"Wolfsburg",country:"Germany",color:"#1b5e20"},
+  {name:"Monchengladbach",country:"Germany",color:"#212121"},
+  {name:"PSG",country:"France",color:"#0d47a1"},
+  {name:"Marseille",country:"France",color:"#1565c0"},
+  {name:"Lyon",country:"France",color:"#0d47a1"},
+  {name:"Monaco",country:"France",color:"#c62828"},
+  {name:"Lille",country:"France",color:"#c62828"},
   {name:"Benfica",country:"Portugal",color:"#c62828"},
   {name:"Porto",country:"Portugal",color:"#0d47a1"},
-  {name:"Ajax",country:"Netherlands",color:"#c62828"},
-  {name:"Bayer Leverkusen",country:"Germany",color:"#c62828"},
-  {name:"RB Leipzig",country:"Germany",color:"#c62828"},
-  {name:"Atalanta",country:"Italy",color:"#1a237e"},
-  {name:"Real Sociedad",country:"Spain",color:"#1565c0"},
-  {name:"Sevilla",country:"Spain",color:"#c62828"},
-  {name:"Villarreal",country:"Spain",color:"#fdd835"},
   {name:"Sporting CP",country:"Portugal",color:"#1b5e20"},
-  {name:"Celtic",country:"Scotland",color:"#1b5e20"},
+  {name:"Braga",country:"Portugal",color:"#c62828"},
+  {name:"Ajax",country:"Netherlands",color:"#c62828"},
+  {name:"PSV Eindhoven",country:"Netherlands",color:"#c62828"},
+  {name:"Feyenoord",country:"Netherlands",color:"#c62828"},
   {name:"Galatasaray",country:"Turkey",color:"#e53935"},
   {name:"Fenerbahce",country:"Turkey",color:"#fdd835"},
-  {name:"Brazil",country:"National Team",color:"#fdd835"},
-  {name:"Argentina",country:"National Team",color:"#1565c0"},
-  {name:"France",country:"National Team",color:"#1a237e"},
-  {name:"Spain",country:"National Team",color:"#c62828"},
-  {name:"Germany",country:"National Team",color:"#212121"},
-  {name:"England",country:"National Team",color:"#e53935"},
-  {name:"Italy",country:"National Team",color:"#1565c0"},
-  {name:"Netherlands",country:"National Team",color:"#e65100"},
-  {name:"Portugal",country:"National Team",color:"#1b5e20"},
-  {name:"Belgium",country:"National Team",color:"#c62828"}
+  {name:"Besiktas",country:"Turkey",color:"#212121"},
+  {name:"Celtic",country:"Scotland",color:"#1b5e20"},
+  {name:"Rangers",country:"Scotland",color:"#0d47a1"},
+  {name:"Boca Juniors",country:"Argentina",color:"#fdd835"},
+  {name:"River Plate",country:"Argentina",color:"#c62828"},
+  {name:"Flamengo",country:"Brazil",color:"#c62828"},
+  {name:"Palmeiras",country:"Brazil",color:"#1b5e20"},
+  {name:"Sao Paulo",country:"Brazil",color:"#c62828"},
+  {name:"Santos",country:"Brazil",color:"#212121"},
+  {name:"Club America",country:"Mexico",color:"#fdd835"},
+  {name:"Chivas Guadalajara",country:"Mexico",color:"#c62828"},
+  {name:"Olympiacos",country:"Greece",color:"#c62828"},
+  {name:"Red Star Belgrade",country:"Serbia",color:"#c62828"},
+  {name:"Dynamo Kyiv",country:"Ukraine",color:"#1565c0"},
+  {name:"Shakhtar Donetsk",country:"Ukraine",color:"#e65100"},
+  {name:"Zenit St Petersburg",country:"Russia",color:"#1565c0"},
+  {name:"Al Hilal",country:"Saudi Arabia",color:"#0d47a1"},
+  {name:"Al Ahly",country:"Egypt",color:"#c62828"}
+];
+
+const nationalTeams = [
+  {name:"Brazil",country:"CONMEBOL",color:"#fdd835"},
+  {name:"Argentina",country:"CONMEBOL",color:"#1565c0"},
+  {name:"Uruguay",country:"CONMEBOL",color:"#1565c0"},
+  {name:"Colombia",country:"CONMEBOL",color:"#fdd835"},
+  {name:"Chile",country:"CONMEBOL",color:"#c62828"},
+  {name:"Peru",country:"CONMEBOL",color:"#c62828"},
+  {name:"Paraguay",country:"CONMEBOL",color:"#c62828"},
+  {name:"Ecuador",country:"CONMEBOL",color:"#fdd835"},
+  {name:"France",country:"UEFA",color:"#1a237e"},
+  {name:"Spain",country:"UEFA",color:"#c62828"},
+  {name:"Germany",country:"UEFA",color:"#212121"},
+  {name:"England",country:"UEFA",color:"#e53935"},
+  {name:"Italy",country:"UEFA",color:"#1565c0"},
+  {name:"Netherlands",country:"UEFA",color:"#e65100"},
+  {name:"Portugal",country:"UEFA",color:"#1b5e20"},
+  {name:"Belgium",country:"UEFA",color:"#c62828"},
+  {name:"Croatia",country:"UEFA",color:"#c62828"},
+  {name:"Denmark",country:"UEFA",color:"#c62828"},
+  {name:"Sweden",country:"UEFA",color:"#fdd835"},
+  {name:"Norway",country:"UEFA",color:"#c62828"},
+  {name:"Switzerland",country:"UEFA",color:"#c62828"},
+  {name:"Austria",country:"UEFA",color:"#c62828"},
+  {name:"Czech Republic",country:"UEFA",color:"#c62828"},
+  {name:"Poland",country:"UEFA",color:"#c62828"},
+  {name:"Serbia",country:"UEFA",color:"#c62828"},
+  {name:"Turkey",country:"UEFA",color:"#c62828"},
+  {name:"Ukraine",country:"UEFA",color:"#fdd835"},
+  {name:"Russia",country:"UEFA",color:"#c62828"},
+  {name:"Wales",country:"UEFA",color:"#c62828"},
+  {name:"Scotland",country:"UEFA",color:"#1a237e"},
+  {name:"Ireland",country:"UEFA",color:"#1b5e20"},
+  {name:"Greece",country:"UEFA",color:"#1565c0"},
+  {name:"Romania",country:"UEFA",color:"#fdd835"},
+  {name:"Hungary",country:"UEFA",color:"#c62828"},
+  {name:"Mexico",country:"CONCACAF",color:"#1b5e20"},
+  {name:"USA",country:"CONCACAF",color:"#1a237e"},
+  {name:"Canada",country:"CONCACAF",color:"#c62828"},
+  {name:"Costa Rica",country:"CONCACAF",color:"#c62828"},
+  {name:"Jamaica",country:"CONCACAF",color:"#fdd835"},
+  {name:"Japan",country:"AFC",color:"#1565c0"},
+  {name:"South Korea",country:"AFC",color:"#c62828"},
+  {name:"Australia",country:"AFC",color:"#fdd835"},
+  {name:"Saudi Arabia",country:"AFC",color:"#1b5e20"},
+  {name:"Iran",country:"AFC",color:"#c62828"},
+  {name:"Senegal",country:"CAF",color:"#1b5e20"},
+  {name:"Nigeria",country:"CAF",color:"#1b5e20"},
+  {name:"Cameroon",country:"CAF",color:"#1b5e20"},
+  {name:"Ghana",country:"CAF",color:"#fdd835"},
+  {name:"Morocco",country:"CAF",color:"#c62828"},
+  {name:"Egypt",country:"CAF",color:"#c62828"},
+  {name:"Ivory Coast",country:"CAF",color:"#e65100"},
+  {name:"Algeria",country:"CAF",color:"#1b5e20"},
+  {name:"Tunisia",country:"CAF",color:"#c62828"}
 ];
 
 let currentFilter = 'all';
@@ -850,16 +1058,286 @@ let spinTab = 'tactics';
 let spinHistory = [];
 let isSpinning = false;
 let currentRotation = 0;
+let currentLang = localStorage.getItem('pes2017-lang') || 'id';
+let currentModalId = null;
+
+const uiText = {
+  id: {
+    pageTitle: 'PES 2017 Gudang Taktik',
+    brand: 'Gudang Taktik',
+    navTactics: 'Taktik',
+    navSpin: 'Roda Acak',
+    heroBadge: 'Edisi PES 2017',
+    heroTitle: 'Kuasai Setiap Taktik',
+    heroCopy: 'Pengaturan lanjutan dari manajer terbaik dunia, disusun khusus untuk Pro Evolution Soccer 2017.',
+    searchPlaceholder: 'Cari manajer, taktik, atau formasi...',
+    filterAll: 'Semua',
+    filterPossession: 'Penguasaan Bola',
+    filterCounter: 'Serangan Balik',
+    filterPressing: 'Pressing Tinggi',
+    filterDefensive: 'Bertahan',
+    filterWide: 'Main Sayap',
+    collectionTitle: 'Koleksi Taktik',
+    emptyTitle: 'Taktik tidak ditemukan',
+    emptyCopy: 'Coba kata kunci atau filter lain.',
+    spinTitle: 'Putar Roda',
+    spinCopy: 'Biarkan roda memilih taktik atau tim berikutnya.',
+    tabTactics: 'Taktik',
+    tabClubs: 'Klub',
+    tabNational: 'Tim Nasional',
+    spinCount: 'Jumlah Putaran',
+    spinNow: 'Putar Sekarang',
+    result: 'Hasil',
+    viewTactic: 'Lihat Detail Taktik',
+    spinHistory: 'Riwayat Putaran',
+    footer: 'PES 2017 Gudang Taktik - Dibuat untuk permainan indah.',
+    tacticSelected: 'Taktik Terpilih',
+    clubSelected: 'Klub Terpilih',
+    nationalSelected: 'Tim Nasional Terpilih',
+    attackSettings: 'Pengaturan Menyerang',
+    attackStyle: 'Gaya Menyerang',
+    buildUp: 'Pembangunan Serangan',
+    attackingArea: 'Area Menyerang',
+    positioning: 'Posisi Pemain',
+    supportRange: 'Jarak Dukungan',
+    positionalSwitch: 'Tukar Posisi',
+    defenseSettings: 'Pengaturan Bertahan',
+    defensiveStyle: 'Gaya Bertahan',
+    containmentArea: 'Area Penahanan',
+    pressuring: 'Tekanan',
+    defensiveLine: 'Garis Pertahanan',
+    compactness: 'Kerapatan',
+    advancedAttack: 'Instruksi Menyerang Lanjutan',
+    advancedDefense: 'Instruksi Bertahan Lanjutan (Biru)',
+    otherSettings: 'Pengaturan Lainnya',
+    setPieces: 'Bola Mati',
+    offsideTrap: 'Jebakan Offside',
+    tipsNotes: 'Tips dan Catatan',
+    active: 'AKTIF',
+    inactive: 'MATI'
+  },
+  en: {
+    pageTitle: 'PES 2017 Tactics Vault',
+    brand: 'Tactics Vault',
+    navTactics: 'Tactics',
+    navSpin: 'Spin Wheel',
+    heroBadge: 'PES 2017 Edition',
+    heroTitle: 'Master Every Tactic',
+    heroCopy: "Advanced settings from the world's greatest managers, precisely configured for Pro Evolution Soccer 2017.",
+    searchPlaceholder: 'Search manager, tactic, or formation...',
+    filterAll: 'All',
+    filterPossession: 'Possession',
+    filterCounter: 'Counter Attack',
+    filterPressing: 'High Press',
+    filterDefensive: 'Defensive',
+    filterWide: 'Wide Play',
+    collectionTitle: 'Tactics Collection',
+    emptyTitle: 'No tactics found',
+    emptyCopy: 'Try a different search term or filter.',
+    spinTitle: 'Spin the Wheel',
+    spinCopy: 'Let fate decide your next tactic or team.',
+    tabTactics: 'Tactics',
+    tabClubs: 'Club Teams',
+    tabNational: 'National Teams',
+    spinCount: 'Number of Spins',
+    spinNow: 'Spin Now',
+    result: 'Result',
+    viewTactic: 'View Tactic Details',
+    spinHistory: 'Spin History',
+    footer: 'PES 2017 Tactics Vault - Built for the beautiful game.',
+    tacticSelected: 'Tactic Selected',
+    clubSelected: 'Club Team Selected',
+    nationalSelected: 'National Team Selected',
+    attackSettings: 'Attacking Settings',
+    attackStyle: 'Attacking Style',
+    buildUp: 'Build Up',
+    attackingArea: 'Attacking Area',
+    positioning: 'Positioning',
+    supportRange: 'Support Range',
+    positionalSwitch: 'Positional Switch',
+    defenseSettings: 'Defensive Settings',
+    defensiveStyle: 'Defensive Style',
+    containmentArea: 'Containment Area',
+    pressuring: 'Pressuring',
+    defensiveLine: 'Defensive Line',
+    compactness: 'Compactness',
+    advancedAttack: 'Advanced Attacking Instructions',
+    advancedDefense: 'Advanced Defensive Instructions (Blue)',
+    otherSettings: 'Other Settings',
+    setPieces: 'Set Pieces',
+    offsideTrap: 'Offside Trap',
+    tipsNotes: 'Tips and Notes',
+    active: 'ON',
+    inactive: 'OFF'
+  }
+};
+
+if (!uiText[currentLang]) currentLang = 'id';
+
+const tagLabels = {
+  attack: 'Menyerang',
+  defend: 'Bertahan',
+  possess: 'Penguasaan Bola',
+  counter: 'Serangan Balik',
+  press: 'Pressing Tinggi',
+  wide: 'Main Sayap'
+};
+
+const tagLabelsEn = {
+  attack: 'Attacking',
+  defend: 'Defensive',
+  possess: 'Possession',
+  counter: 'Counter',
+  press: 'High Press',
+  wide: 'Wide Play'
+};
+
+const valueLabels = {
+  'Counter Attack': 'Serangan Balik',
+  'Possession Game': 'Penguasaan Bola',
+  'Short Pass': 'Umpan Pendek',
+  'Long Pass': 'Umpan Panjang',
+  'Wide': 'Sayap',
+  'Centre': 'Tengah',
+  'Middle': 'Tengah',
+  'Flexible': 'Fleksibel',
+  'Maintain': 'Tetap',
+  'Frontline Defender': 'Bertahan dari Depan',
+  'All-out Defense': 'Bertahan Total',
+  'Aggressive': 'Agresif',
+  'Conservative': 'Konservatif',
+  'On': 'Aktif',
+  'Off': 'Mati',
+  'Zonal Marking': 'Penjagaan Zona',
+  'Man Marking': 'Penjagaan Orang',
+  'Frontline Pressure': 'Tekanan Garis Depan',
+  'Deep Line': 'Garis Rendah'
+};
+
+const countryLabels = {
+  Spain: 'Spanyol',
+  England: 'Inggris',
+  Italy: 'Italia',
+  Germany: 'Jerman',
+  France: 'Prancis',
+  Portugal: 'Portugal',
+  Netherlands: 'Belanda',
+  Turkey: 'Turki',
+  Scotland: 'Skotlandia',
+  Argentina: 'Argentina',
+  Brazil: 'Brasil',
+  Mexico: 'Meksiko',
+  Greece: 'Yunani',
+  Serbia: 'Serbia',
+  Ukraine: 'Ukraina',
+  Russia: 'Rusia',
+  'Saudi Arabia': 'Arab Saudi',
+  Egypt: 'Mesir'
+};
 
 function getTagClass(tag) { const m={attack:'tag-attack',defend:'tag-defend',possess:'tag-possess',counter:'tag-counter',press:'tag-press',wide:'tag-wide'}; return m[tag]||'tag-possess'; }
-function getTagLabel(tag) { const m={attack:'Attacking',defend:'Defensive',possess:'Possession',counter:'Counter',press:'High Press',wide:'Wide Play'}; return m[tag]||tag; }
+function t(key) { return (uiText[currentLang] && uiText[currentLang][key]) || uiText.id[key] || key; }
+function getTagLabel(tag) { return (currentLang === 'id' ? tagLabels : tagLabelsEn)[tag] || tag; }
+function displayValue(value) { return currentLang === 'id' ? (valueLabels[value] || value) : value; }
+function displayCountry(country) { return currentLang === 'id' ? (countryLabels[country] || country) : country; }
+function getInstructionDesc(name) { return currentLang === 'id' ? (instructionDescs[name] || '') : (instructionDescsEn[name] || instructionDescs[name] || ''); }
+
+function normalizePesAdvancedInstructions(t) {
+  const adv = t.settings.advanced;
+  const atk = adv.atkInstructions || {};
+  const oldDef = adv.defInstructions || {};
+  const def = {};
+
+  if (oldDef['Tight Marking'] || oldDef.Marking || adv.setPieces === 'Man Marking') def['Tight Marking'] = true;
+  if (oldDef['Deep Defensive Line'] || oldDef['Defensive Line'] === 'Deep Line' || t.settings.defense.defensiveLine <= 4) def['Deep Defensive Line'] = true;
+  if (oldDef['Swarm The Box'] || (t.settings.defense.compactness >= 8 && t.settings.defense.defensiveLine <= 5) || t.settings.defense.defensiveStyle === 'All-out Defense') def['Swarm The Box'] = true;
+  if (oldDef['Counter Target'] || oldDef['Counter Targets'] || atk['Counter Targets'] || t.settings.attack.attackingStyle === 'Counter Attack') def['Counter Target'] = true;
+  if (oldDef.Gegenpress || (t.settings.defense.pressuring === 'Aggressive' && t.settings.defense.defensiveLine >= 7)) def.Gegenpress = true;
+
+  delete atk['Counter Targets'];
+  adv.atkInstructions = atk;
+  adv.defInstructions = def;
+}
+
+function getActiveInstructionNames(instructions) {
+  return Object.keys(instructions || {}).filter(name => instructions[name] === true);
+}
+
+function getTacticDesc(t) {
+  const attack = t.settings.attack;
+  const defense = t.settings.defense;
+  const style = getTagLabel(t.style).toLowerCase();
+  const area = displayValue(attack.attackingArea).toLowerCase();
+  const build = displayValue(attack.buildUp).toLowerCase();
+  const pressure = displayValue(defense.pressuring).toLowerCase();
+  if (currentLang === 'en') {
+    return `${t.manager} uses a ${t.formation} with a ${style} identity. Attacks are built through ${build} into the ${area} area, while the defensive phase keeps compactness at ${defense.compactness}/10 with ${pressure} pressing.`;
+  }
+  return `${t.manager} memakai ${t.formation} dengan identitas ${style}. Serangan dibangun lewat ${build} dan fokus ke area ${area}, sementara fase bertahan menjaga kerapatan ${defense.compactness}/10 dengan pressing ${pressure}.`;
+}
+
+function getTacticNotes(t) {
+  const attack = t.settings.attack;
+  const defense = t.settings.defense;
+  const adv = t.settings.advanced;
+  const activeDef = getActiveInstructionNames(adv.defInstructions);
+  const activeAtk = getActiveInstructionNames(adv.atkInstructions);
+  if (currentLang === 'en') {
+    return [
+      `Use the ${t.formation} shape with disciplined spacing between lines.`,
+      `Attacking style: ${displayValue(attack.attackingStyle)} through ${displayValue(attack.buildUp).toLowerCase()} into the ${displayValue(attack.attackingArea).toLowerCase()} area.`,
+      `Out of possession, use ${displayValue(defense.defensiveStyle).toLowerCase()} with defensive line ${defense.defensiveLine}/10 and compactness ${defense.compactness}/10.`,
+      activeDef.length ? `Main blue instructions: ${activeDef.join(', ')}.` : `Blue instructions are kept light so the team shape stays stable.`,
+      activeAtk.length ? `Active attacking instructions: ${activeAtk.join(', ')}.` : `Build attacks simply and avoid too much rotation.`
+    ];
+  }
+  return [
+    `Gunakan formasi ${t.formation} dengan disiplin jarak antarlini.`,
+    `Gaya menyerang: ${displayValue(attack.attackingStyle)} melalui ${displayValue(attack.buildUp).toLowerCase()} ke area ${displayValue(attack.attackingArea).toLowerCase()}.`,
+    `Saat bertahan, pakai ${displayValue(defense.defensiveStyle).toLowerCase()} dengan garis ${defense.defensiveLine}/10 dan kerapatan ${defense.compactness}/10.`,
+    activeDef.length ? `Instruksi biru utama: ${activeDef.join(', ')}.` : `Instruksi biru dibuat ringan agar bentuk tim tetap stabil.`,
+    activeAtk.length ? `Instruksi menyerang aktif: ${activeAtk.join(', ')}.` : `Bangun serangan sederhana dan jangan terlalu banyak rotasi.`
+  ];
+}
+
+tactics.forEach(normalizePesAdvancedInstructions);
+
+function applyLanguage() {
+  document.documentElement.lang = currentLang;
+  document.title = t('pageTitle');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  document.querySelectorAll('#langToggle, #mobileLangToggle').forEach(btn => {
+    btn.textContent = currentLang === 'id' ? 'EN' : 'ID';
+  });
+
+  renderCards();
+  if (document.getElementById('page-spin').classList.contains('active')) drawWheel();
+  const result = document.getElementById('spinResult');
+  const labelMap = { tactics: t('tacticSelected'), clubs: t('clubSelected'), national: t('nationalSelected') };
+  document.getElementById('spinResultLabel').textContent = result.classList.contains('show') ? (labelMap[spinTab] || t('result')) : t('result');
+  if (currentModalId && document.getElementById('modalOverlay').style.display === 'flex') {
+    openModal(currentModalId);
+  }
+  lucide.createIcons();
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === 'id' ? 'en' : 'id';
+  localStorage.setItem('pes2017-lang', currentLang);
+  applyLanguage();
+}
 
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   document.querySelectorAll('.navbar-links a, .mobile-menu a').forEach(a => {
     a.classList.remove('active');
-    if (a.textContent.trim().toLowerCase().includes(page === 'tactics' ? 'tactic' : 'spin')) {
+    if ((a.getAttribute('onclick') || '').includes(`showPage('${page}')`)) {
       a.classList.add('active');
     }
   });
@@ -878,11 +1356,13 @@ function renderCards() {
 
   let filtered = tactics.filter(t => {
     const matchFilter = currentFilter === 'all' || t.style === currentFilter || t.tags.includes(currentFilter);
-    const matchSearch = searchQuery === '' || t.manager.toLowerCase().includes(searchQuery) || t.title.toLowerCase().includes(searchQuery) || t.formation.toLowerCase().includes(searchQuery) || t.tags.some(tag => tag.includes(searchQuery));
+    const matchSearch = searchQuery === '' || t.manager.toLowerCase().includes(searchQuery) || t.title.toLowerCase().includes(searchQuery) || t.formation.toLowerCase().includes(searchQuery) || getTacticDesc(t).toLowerCase().includes(searchQuery) || t.tags.some(tag => tag.includes(searchQuery) || getTagLabel(tag).toLowerCase().includes(searchQuery));
     return matchFilter && matchSearch;
   });
 
-  count.textContent = `${filtered.length} tactic${filtered.length !== 1 ? 's' : ''}`;
+  count.textContent = currentLang === 'id'
+    ? `${filtered.length} taktik`
+    : `${filtered.length} tactic${filtered.length !== 1 ? 's' : ''}`;
 
   if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
 
@@ -896,7 +1376,7 @@ function renderCards() {
         </div>
         <div class="card-formation">${t.formation}</div>
       </div>
-      <div class="card-desc">${t.desc}</div>
+      <div class="card-desc">${getTacticDesc(t)}</div>
       <div class="card-tags">${t.tags.map(tag => `<span class="tag ${getTagClass(tag)}">${getTagLabel(tag)}</span>`).join('')}</div>
     </div>
   `).join('');
@@ -918,14 +1398,13 @@ function getBarColor(val) { if (val <= 3) return '#34c759'; if (val <= 6) return
 
 function buildFormationVisual(nums) {
   const defLabels = { 2:['CB','CB'], 3:['CB','CB','CB'], 4:['LB','CB','CB','RB'], 5:['LB','CB','CB','CB','RB'] };
-  const amfLabels = { 1:['AMF'], 2:['AMF','AMF'], 3:['LAM','AMF','RAM'], 4:['LAM','AMF','AMF','RAM'] };
-  const deepMidLabels = { 1:['CM'], 2:['CDM','CDM'], 3:['CM','CM','CM'], 4:['LM','CM','CM','RM'], 5:['LWB','CM','CDM','CM','RWB'] };
-  const atkLabels = { 1:['ST'], 2:['ST','ST'], 3:['LW','ST','RW'], 4:['LW','CF','CF','RW'] };
+  const amfLabels = { 1:['AMF'], 2:['SS','SS'], 3:['LMF','AMF','RMF'], 4:['LMF','AMF','AMF','RMF'] };
+  const deepMidLabels = { 1:['DMF'], 2:['DMF','CMF'], 3:['CMF','DMF','CMF'], 4:['LMF','CMF','CMF','RMF'], 5:['LMF','CMF','DMF','CMF','RMF'] };
+  const atkLabels = { 1:['CF'], 2:['SS','CF'], 3:['LWF','CF','RWF'], 4:['LWF','SS','CF','RWF'] };
 
   let lines = '';
   const reversed = [...nums].reverse();
-  const outfieldLines = reversed.slice(0, -1);
-  const midLineCount = outfieldLines.length - 2;
+  const midLineCount = reversed.length - 3;
 
   for (let i = 0; i < reversed.length; i++) {
     const count = reversed[i];
@@ -939,12 +1418,12 @@ function buildFormationVisual(nums) {
     } else if (isDef) {
       posArr = defLabels[count] || Array(count).fill('CB');
     } else if (isAtk) {
-      posArr = atkLabels[count] || Array(count).fill('ST');
+      posArr = atkLabels[count] || Array(count).fill('CF');
     } else {
       if (midLineCount >= 2 && i === 1) {
         posArr = amfLabels[count] || Array(count).fill('AMF');
       } else {
-        posArr = deepMidLabels[count] || Array(count).fill('CM');
+        posArr = deepMidLabels[count] || Array(count).fill('CMF');
       }
     }
 
@@ -955,76 +1434,73 @@ function buildFormationVisual(nums) {
 
 function renderInstruction(name, isActive, type, extra) {
   const icon = instructionIcons[name] || 'circle';
-  const desc = instructionDescs[name] || '';
+  const desc = getInstructionDesc(name);
   const activeClass = isActive ? 'active' : 'inactive';
   const typeClass = type === 'atk' ? 'atk' : 'def';
   let subHtml = '';
-  if (name === 'Defensive Line' && isActive && extra) {
-    const isFrontline = extra === 'Frontline Pressure';
-    subHtml = `<div class="instruction-sub ${isFrontline ? 'frontline' : 'deep'}"><i data-lucide="${isFrontline ? 'arrow-up' : 'arrow-down'}" style="width:11px;height:11px"></i> ${extra}</div>`;
+  if (extra) {
+    subHtml = `<div class="instruction-sub deep"><i data-lucide="info" style="width:11px;height:11px"></i> ${displayValue(extra)}</div>`;
   }
-  return `<div class="instruction-item ${activeClass} ${typeClass}"><div class="instruction-top"><div class="instruction-name"><i data-lucide="${icon}" style="width:14px;height:14px"></i> ${name}</div><div class="instruction-toggle ${isActive ? 'on' : 'off'}"><i data-lucide="${isActive ? 'check' : 'minus'}" style="width:10px;height:10px"></i> ${isActive ? 'ON' : 'OFF'}</div></div>${isActive ? `<div class="instruction-desc">${desc}</div>` : ''}${subHtml}</div>`;
+  return `<div class="instruction-item ${activeClass} ${typeClass}"><div class="instruction-top"><div class="instruction-name"><i data-lucide="${icon}" style="width:14px;height:14px"></i> ${name}</div><div class="instruction-toggle ${isActive ? 'on' : 'off'}"><i data-lucide="${isActive ? 'check' : 'minus'}" style="width:10px;height:10px"></i> ${isActive ? t('active') : t('inactive')}</div></div>${isActive ? `<div class="instruction-desc">${desc}</div>` : ''}${subHtml}</div>`;
 }
 
 function openModal(id) {
-  const t = tactics.find(x => x.id === id);
-  if (!t) return;
+  const tac = tactics.find(x => x.id === id);
+  if (!tac) return;
+  currentModalId = id;
 
-  document.getElementById('modalAvatar').style.background = t.color;
-  document.getElementById('modalAvatar').innerHTML = `<i data-lucide="${t.icon}" style="width:26px;height:26px"></i>`;
-  document.getElementById('modalManager').textContent = t.manager;
-  document.getElementById('modalTitle').textContent = t.title;
-  document.getElementById('modalFormation').innerHTML = `<i data-lucide="layout" style="width:14px;height:14px"></i> ${t.formation}`;
+  document.getElementById('modalAvatar').style.background = tac.color;
+  document.getElementById('modalAvatar').innerHTML = `<i data-lucide="${tac.icon}" style="width:26px;height:26px"></i>`;
+  document.getElementById('modalManager').textContent = tac.manager;
+  document.getElementById('modalTitle').textContent = tac.title;
+  document.getElementById('modalFormation').innerHTML = `<i data-lucide="layout" style="width:14px;height:14px"></i> ${tac.formation}`;
 
-  const s = t.settings;
+  const s = tac.settings;
   const adv = s.advanced;
 
   let atkHtml = '', defHtml = '';
   allAtkInstr.forEach(name => { atkHtml += renderInstruction(name, adv.atkInstructions[name] === true, 'atk'); });
   allDefInstr.forEach(name => {
-    let isActive = false, extra = null;
-    if (name === 'Defensive Line') { isActive = !!adv.defInstructions[name]; extra = adv.defInstructions[name] || null; }
-    else { isActive = adv.defInstructions[name] === true; }
-    defHtml += renderInstruction(name, isActive, 'def', extra);
+    defHtml += renderInstruction(name, adv.defInstructions[name] === true, 'def');
   });
 
   document.getElementById('modalBody').innerHTML = `
-    <div class="modal-desc">${t.desc}</div>
-    ${buildFormationVisual(t.formationNums)}
+    <div class="modal-desc">${getTacticDesc(tac)}</div>
+    ${buildFormationVisual(tac.formationNums)}
     <div class="settings-group">
-      <div class="settings-group-title"><i data-lucide="sword" style="width:14px;height:14px"></i> Attacking Settings</div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="target" style="width:14px;height:14px"></i> Attacking Style</span><span class="value-pill ${s.attack.attackingStyle.includes('Possession') ? 'pill-blue' : 'pill-orange'}">${s.attack.attackingStyle}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="arrow-up-right" style="width:14px;height:14px"></i> Build Up</span><span class="value-pill ${s.attack.buildUp.includes('Short') ? 'pill-green' : 'pill-red'}">${s.attack.buildUp}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="crosshair" style="width:14px;height:14px"></i> Attacking Area</span><span class="value-pill ${s.attack.attackingArea === 'Wide' ? 'pill-teal' : 'pill-purple'}">${s.attack.attackingArea}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="users" style="width:14px;height:14px"></i> Positioning</span><span class="value-pill pill-blue">${s.attack.positioning}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="ruler" style="width:14px;height:14px"></i> Support Range</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.attack.supportRange)}" style="width:${s.attack.supportRange * 10}%"></div></div><span class="setting-value">${s.attack.supportRange}/10</span></div></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="shuffle" style="width:14px;height:14px"></i> Positional Switch</span><span class="value-pill ${s.attack.positionalSwitch === 'On' ? 'pill-green' : 'pill-red'}">${s.attack.positionalSwitch}</span></div>
+      <div class="settings-group-title"><i data-lucide="sword" style="width:14px;height:14px"></i> ${t('attackSettings')}</div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="target" style="width:14px;height:14px"></i> ${t('attackStyle')}</span><span class="value-pill ${s.attack.attackingStyle.includes('Possession') ? 'pill-blue' : 'pill-orange'}">${displayValue(s.attack.attackingStyle)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="arrow-up-right" style="width:14px;height:14px"></i> ${t('buildUp')}</span><span class="value-pill ${s.attack.buildUp.includes('Short') ? 'pill-green' : 'pill-red'}">${displayValue(s.attack.buildUp)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="crosshair" style="width:14px;height:14px"></i> ${t('attackingArea')}</span><span class="value-pill ${s.attack.attackingArea === 'Wide' ? 'pill-teal' : 'pill-purple'}">${displayValue(s.attack.attackingArea)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="users" style="width:14px;height:14px"></i> ${t('positioning')}</span><span class="value-pill pill-blue">${displayValue(s.attack.positioning)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="ruler" style="width:14px;height:14px"></i> ${t('supportRange')}</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.attack.supportRange)}" style="width:${s.attack.supportRange * 10}%"></div></div><span class="setting-value">${s.attack.supportRange}/10</span></div></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="shuffle" style="width:14px;height:14px"></i> ${t('positionalSwitch')}</span><span class="value-pill ${s.attack.positionalSwitch === 'On' ? 'pill-green' : 'pill-red'}">${displayValue(s.attack.positionalSwitch)}</span></div>
     </div>
     <div class="settings-group">
-      <div class="settings-group-title"><i data-lucide="shield" style="width:14px;height:14px"></i> Defensive Settings</div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="shield-check" style="width:14px;height:14px"></i> Defensive Style</span><span class="value-pill ${s.defense.defensiveStyle.includes('Frontline') ? 'pill-orange' : 'pill-green'}">${s.defense.defensiveStyle}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="map-pin" style="width:14px;height:14px"></i> Containment Area</span><span class="value-pill ${s.defense.containmentArea === 'Wide' ? 'pill-teal' : 'pill-purple'}">${s.defense.containmentArea}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="flame" style="width:14px;height:14px"></i> Pressuring</span><span class="value-pill ${s.defense.pressuring === 'Aggressive' ? 'pill-red' : 'pill-green'}">${s.defense.pressuring}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="arrow-up" style="width:14px;height:14px"></i> Defensive Line</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.defense.defensiveLine)}" style="width:${s.defense.defensiveLine * 10}%;background:${getBarColor(s.defense.defensiveLine)}"></div></div><span class="setting-value">${s.defense.defensiveLine}/10</span></div></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="minimize-2" style="width:14px;height:14px"></i> Compactness</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.defense.compactness)}" style="width:${s.defense.compactness * 10}%;background:${getBarColor(s.defense.compactness)}"></div></div><span class="setting-value">${s.defense.compactness}/10</span></div></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="user-check" style="width:14px;height:14px"></i> Sweeper</span><span class="value-pill ${s.defense.sweeper === 'On' ? 'pill-green' : 'pill-red'}">${s.defense.sweeper}</span></div>
+      <div class="settings-group-title"><i data-lucide="shield" style="width:14px;height:14px"></i> ${t('defenseSettings')}</div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="shield-check" style="width:14px;height:14px"></i> ${t('defensiveStyle')}</span><span class="value-pill ${s.defense.defensiveStyle.includes('Frontline') ? 'pill-orange' : 'pill-green'}">${displayValue(s.defense.defensiveStyle)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="map-pin" style="width:14px;height:14px"></i> ${t('containmentArea')}</span><span class="value-pill ${s.defense.containmentArea === 'Wide' ? 'pill-teal' : 'pill-purple'}">${displayValue(s.defense.containmentArea)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="flame" style="width:14px;height:14px"></i> ${t('pressuring')}</span><span class="value-pill ${s.defense.pressuring === 'Aggressive' ? 'pill-red' : 'pill-green'}">${displayValue(s.defense.pressuring)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="arrow-up" style="width:14px;height:14px"></i> ${t('defensiveLine')}</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.defense.defensiveLine)}" style="width:${s.defense.defensiveLine * 10}%;background:${getBarColor(s.defense.defensiveLine)}"></div></div><span class="setting-value">${s.defense.defensiveLine}/10</span></div></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="minimize-2" style="width:14px;height:14px"></i> ${t('compactness')}</span><div class="setting-bar"><div class="bar-track"><div class="bar-fill ${getBarClass(s.defense.compactness)}" style="width:${s.defense.compactness * 10}%;background:${getBarColor(s.defense.compactness)}"></div></div><span class="setting-value">${s.defense.compactness}/10</span></div></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="user-check" style="width:14px;height:14px"></i> Sweeper</span><span class="value-pill ${s.defense.sweeper === 'On' ? 'pill-green' : 'pill-red'}">${displayValue(s.defense.sweeper)}</span></div>
     </div>
     <div class="settings-group">
-      <div class="settings-group-title"><i data-lucide="sword" style="width:14px;height:14px"></i> Advanced Attacking Instructions</div>
+      <div class="settings-group-title"><i data-lucide="sword" style="width:14px;height:14px"></i> ${t('advancedAttack')}</div>
       ${atkHtml}
     </div>
     <div class="settings-group">
-      <div class="settings-group-title"><i data-lucide="shield" style="width:14px;height:14px"></i> Advanced Defensive Instructions</div>
+      <div class="settings-group-title"><i data-lucide="shield" style="width:14px;height:14px"></i> ${t('advancedDefense')}</div>
       ${defHtml}
     </div>
     <div class="settings-group">
-      <div class="settings-group-title"><i data-lucide="settings" style="width:14px;height:14px"></i> Other Settings</div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="flag" style="width:14px;height:14px"></i> Set Pieces</span><span class="value-pill pill-teal">${adv.setPieces}</span></div>
-      <div class="setting-row"><span class="setting-label"><i data-lucide="alert-triangle" style="width:14px;height:14px"></i> Offside Trap</span><span class="value-pill ${adv.offsideTrap === 'On' ? 'pill-green' : 'pill-red'}">${adv.offsideTrap}</span></div>
+      <div class="settings-group-title"><i data-lucide="settings" style="width:14px;height:14px"></i> ${t('otherSettings')}</div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="flag" style="width:14px;height:14px"></i> ${t('setPieces')}</span><span class="value-pill pill-teal">${displayValue(adv.setPieces)}</span></div>
+      <div class="setting-row"><span class="setting-label"><i data-lucide="alert-triangle" style="width:14px;height:14px"></i> ${t('offsideTrap')}</span><span class="value-pill ${adv.offsideTrap === 'On' ? 'pill-green' : 'pill-red'}">${displayValue(adv.offsideTrap)}</span></div>
     </div>
     <div class="settings-group">
-      <div class="settings-group-title"><i data-lucide="lightbulb" style="width:14px;height:14px"></i> Tips & Notes</div>
-      <div class="notes-box"><ul>${t.notes.map(n => `<li>${n}</li>`).join('')}</ul></div>
+      <div class="settings-group-title"><i data-lucide="lightbulb" style="width:14px;height:14px"></i> ${t('tipsNotes')}</div>
+      <div class="notes-box"><ul>${getTacticNotes(tac).map(n => `<li>${n}</li>`).join('')}</ul></div>
     </div>
   `;
 
@@ -1039,6 +1515,7 @@ function closeModal(e) {
   if (e && e.target !== document.getElementById('modalOverlay') && e.target !== document.querySelector('.modal-close')) return;
   const overlay = document.getElementById('modalOverlay');
   overlay.classList.remove('show');
+  currentModalId = null;
   setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
 }
 
@@ -1055,8 +1532,9 @@ function switchSpinTab(tab) {
 }
 
 function getWheelItems() {
-  if (spinTab === 'tactics') return tactics.map(t => ({ label: t.title, sub: t.manager, color: t.color }));
-  return famousTeams.map(t => ({ label: t.name, sub: t.country, color: t.color }));
+  if (spinTab === 'tactics') return tactics.map(t => ({ label: t.title, sub: t.manager, color: t.color, id: t.id }));
+  if (spinTab === 'clubs') return clubTeams.map(t => ({ label: t.name, sub: displayCountry(t.country), color: t.color }));
+  return nationalTeams.map(t => ({ label: t.name, sub: displayCountry(t.country), color: t.color }));
 }
 
 function drawWheel() {
@@ -1140,9 +1618,17 @@ function spinWheel() {
 
     setTimeout(() => {
       const item = items[winIndex];
-      document.getElementById('spinResultLabel').textContent = spinTab === 'tactics' ? 'Tactic Selected' : 'Team Selected';
+      const labelMap = { tactics: t('tacticSelected'), clubs: t('clubSelected'), national: t('nationalSelected') };
+      document.getElementById('spinResultLabel').textContent = labelMap[spinTab] || t('result');
       document.getElementById('spinResultValue').textContent = item.label;
       document.getElementById('spinResultSub').textContent = item.sub;
+      const actionContainer = document.getElementById('spinResultAction');
+      if (spinTab === 'tactics' && item.id) {
+        actionContainer.style.display = 'inline-flex';
+        actionContainer.onclick = () => openModal(item.id);
+      } else {
+        actionContainer.style.display = 'none';
+      }
       document.getElementById('spinResult').classList.add('show');
 
       spinHistory.push(item);
@@ -1165,19 +1651,23 @@ function updateHistory() {
   const container = document.getElementById('spinHistory');
   const list = document.getElementById('spinHistoryList');
   container.style.display = 'block';
-  list.innerHTML = spinHistory.map((item, i) => `
-    <div class="spin-history-item">
+  list.innerHTML = spinHistory.map((item, i) => {
+    const isClickable = item.id ? 'clickable' : '';
+    const clickAttr = item.id ? `onclick="openModal(${item.id})"` : '';
+    return `
+    <div class="spin-history-item ${isClickable}" ${clickAttr}>
       <span class="num">#${i + 1}</span>
       <span class="name">${item.label}</span>
       <span style="font-size:11px;color:var(--text-tertiary)">${item.sub}</span>
-    </div>
-  `).join('');
+      ${item.id ? '<i data-lucide="chevron-right" style="width:14px;height:14px;color:var(--accent);flex-shrink:0"></i>' : ''}
+    </div>`;
+  }).join('');
+  lucide.createIcons();
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal({target: document.getElementById('modalOverlay')}); });
 
-renderCards();
-lucide.createIcons();
+applyLanguage();
 </script>
 </body>
 </html>
