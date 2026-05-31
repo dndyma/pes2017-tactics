@@ -322,7 +322,7 @@
     .empty-state p { font-size: 14px; color: var(--text-tertiary); }
 
     /* SPIN WHEEL PAGE */
-    .spin-page { padding: 100px 24px 80px; max-width: 900px; margin: 0 auto; }
+    .spin-page { padding: 100px 24px 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; overflow: visible; }
 
     .spin-header { text-align: center; margin-bottom: 40px; }
 
@@ -350,7 +350,8 @@
     .spin-tab.active { background: var(--text); color: #fff; border-color: var(--text); }
 
     .spin-container {
-      display: flex; flex-direction: column; align-items: center; gap: 32px;
+      display: flex; flex-direction: column; align-items: center; gap: 24px;
+      width: 100%; overflow: visible; padding-bottom: 40px;
     }
 
     .wheel-wrapper {
@@ -398,10 +399,11 @@
     .spin-input-group input:focus { border-color: var(--accent); }
 
     .spin-btn {
-      display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 32px;
       border: none; border-radius: 14px; font-size: 16px; font-weight: 700;
       font-family: inherit; background: var(--text); color: #fff; cursor: pointer;
       transition: all 0.2s ease; box-shadow: var(--shadow);
+      min-height: 48px; z-index: 10; position: relative;
     }
 
     .spin-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
@@ -514,15 +516,15 @@
       .spin-page { padding: 80px 16px 60px; }
       .spin-header h1 { font-size: 28px; }
       .spin-header p { font-size: 14px; }
-      .spin-tabs { gap: 6px; }
+      .spin-tabs { gap: 6px; flex-wrap: wrap; }
       .spin-tab { padding: 8px 16px; font-size: 13px; }
-      .wheel-wrapper { width: 280px; height: 280px; }
-      .wheel-canvas { width: 280px; height: 280px; }
-      .spin-controls { gap: 12px; }
-      .spin-input-group { padding: 6px 12px; }
+      .wheel-wrapper { width: 260px; height: 260px; position: relative; }
+      .wheel-canvas { width: 260px; height: 260px; }
+      .spin-controls { gap: 12px; width: 100%; }
+      .spin-input-group { padding: 6px 12px; width: 100%; justify-content: center; }
       .spin-input-group label { font-size: 12px; }
       .spin-input-group input { width: 50px; padding: 6px 10px; font-size: 14px; }
-      .spin-btn { padding: 12px 24px; font-size: 14px; }
+      .spin-btn { padding: 14px 24px; font-size: 15px; width: 100%; justify-content: center; background: #0071e3; }
       .spin-result { padding: 20px; }
       .spin-result-label { font-size: 11px; }
       .spin-result-value { font-size: 18px; }
@@ -537,10 +539,11 @@
 
     @media (max-width: 360px) {
       .hero h1 { font-size: 24px; }
-      .wheel-wrapper { width: 260px; height: 260px; }
-      .wheel-canvas { width: 260px; height: 260px; }
+      .wheel-wrapper { width: 240px; height: 240px; }
+      .wheel-canvas { width: 240px; height: 240px; }
       .tactic-card { padding: 16px; }
       .modal-title { font-size: 16px; }
+      .spin-btn { padding: 12px 20px; font-size: 14px; }
     }
 
     @keyframes fadeInUp {
